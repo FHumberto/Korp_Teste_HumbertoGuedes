@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Korp.Estoque.Api.Controllers;
 
-[ApiController]
 [Route("/")]
 [Tags("A P I")]
-public sealed class DefaultController : ControllerBase
+[ApiVersionNeutral]
+public sealed class DefaultController : BaseController
 {
     [HttpGet]
     [EndpointSummary("Checagem")]
