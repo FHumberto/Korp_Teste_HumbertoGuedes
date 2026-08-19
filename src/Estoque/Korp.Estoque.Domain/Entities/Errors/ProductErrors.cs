@@ -21,6 +21,9 @@ public static class ProductErrors
     public static Error DescriptionTooLong { get; }
         = Error.Validation("PRODUCT_DESCRIPTION_TOO_LONG", $"A descrição do produto deve possuir no máximo {Product.MaxDescriptionLength} caracteres.");
 
+    public static Error CodeAlreadyExists { get; }
+        = Error.Conflict("PRODUCT_CODE_ALREADY_EXISTS", "Já existe um produto cadastrado com o código informado.");
+
     public static Error NegativeBalance { get; }
         = Error.Validation("PRODUCT_NEGATIVE_BALANCE", "O saldo do produto não pode ser negativo.");
 
