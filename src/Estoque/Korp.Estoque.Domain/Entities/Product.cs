@@ -33,7 +33,6 @@ public sealed class Product : Entity
         Description = description;
         Balance = initialBalance;
         CreatedAt = createdAt;
-        UpdatedAt = createdAt;
 
         Validate();
     }

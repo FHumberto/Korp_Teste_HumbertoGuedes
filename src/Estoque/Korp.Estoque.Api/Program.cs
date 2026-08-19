@@ -18,5 +18,4 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 
-// TODO: Aplicar as migrations do Estoque na etapa de provisionamento do ambiente antes de iniciar a API.
 await app.RunAsync();

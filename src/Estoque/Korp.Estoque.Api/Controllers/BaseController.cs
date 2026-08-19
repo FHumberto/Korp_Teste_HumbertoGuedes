@@ -3,9 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Korp.Estoque.Api.Controllers;
 
+[ApiController]
 [Route("api/v{v:apiVersion}/[controller]")]
 public class BaseController : ControllerBase
 {
+    #region [ HTTP ]
+
     protected IActionResult Problem(Error error)
     {
         int statusCode = error.ErrorType switch
@@ -34,13 +37,13 @@ public class BaseController : ControllerBase
             return StatusCode(statusCode, problemDetails);
         }
 
-        return Problem(
+        return Problem
+        (
             statusCode: statusCode,
             detail: error.Code,
-            title: error.Description,
-            extensions: new Dictionary<string, object?>
-            {
-                ["traceId"] = HttpContext.TraceIdentifier
-            });
+            title: error.Description
+        );
     }
+
+    #endregion
 }
