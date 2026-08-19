@@ -1,4 +1,6 @@
-﻿namespace Korp.Estoque.Api;
+﻿using Korp.Estoque.Api.Middlewares;
+
+namespace Korp.Estoque.Api;
 
 public static class DependencyInjection
 {
@@ -7,6 +9,7 @@ public static class DependencyInjection
         services.AddControllers();
         services.AddOpenApi();
         services.AddProblemDetails();
+        services.AddExceptionHandler<ExceptionMiddleware>();
 
         return services;
     }
