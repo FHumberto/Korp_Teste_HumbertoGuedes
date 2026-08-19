@@ -1,0 +1,41 @@
+###############################################################################
+# Default line endings
+###############################################################################
+* text=auto eol=crlf
+
+###############################################################################
+# Windows scripts / Visual Studio
+###############################################################################
+*.sln text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+###############################################################################
+# Source and documentation
+###############################################################################
+*.cs text eol=crlf
+*.csproj text eol=crlf
+*.props text eol=crlf
+*.targets text eol=crlf
+*.json text eol=crlf
+*.md text eol=crlf
+*.ts text eol=crlf
+*.html text eol=crlf
+*.css text eol=crlf
+*.scss text eol=crlf
+*.yml text eol=crlf
+*.yaml text eol=crlf
+
+###############################################################################
+# Binary files
+###############################################################################
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.dll binary
+*.exe binary
