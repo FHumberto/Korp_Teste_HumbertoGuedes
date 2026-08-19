@@ -1,0 +1,42 @@
+﻿using Asp.Versioning;
+using Korp.Estoque.Application.Abstractions.Wrappers;
+using Korp.Estoque.Application.Contracts.UseCases;
+using Korp.Estoque.Application.Features.Product.CreateProduct;
+using Korp.Estoque.Application.Features.Product.GetProduct;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Korp.Estoque.Api.Controllers.v1;
+
+[Tags("Products")]
+[ApiVersion("1")]
+public sealed class ProductsController : BaseController
+{
+    #region [ LEITURA ]
+
+    [HttpGet("{id:guid}")]
+    [ProducesResponseType<GetProductResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetProductById([FromServices] IGetProductUseCase useCase, Guid id, CancellationToken ct)
+    {
+        return (await useCase.ExecuteAsync(id, ct)).Match(onSuccess: Ok, onFailure: Problem);
+    }
+
+    #endregion
+
+    #region [ ESCRITA ]
+
+    [HttpPost]
+    [ProducesResponseType<CreateProductResponse>(StatusCodes.Status201Created)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict)]
+    public async Task<IActionResult> CreateProductAsync([FromServices] ICreateProductUseCase useCase, [FromBody] CreateProductRequest request, CancellationToken ct)
+    {
+        return (await useCase.ExecuteAsync(request, ct)).Match
+        (
+            onSuccess: dto => CreatedAtAction(actionName: nameof(GetProductById), routeValues: new { id = dto.Id }, value: dto),
+            onFailure: Problem
+        );
+    }
+
+    #endregion
+}
