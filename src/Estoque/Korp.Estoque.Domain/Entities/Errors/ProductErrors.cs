@@ -24,6 +24,9 @@ public static class ProductErrors
     public static Error CodeAlreadyExists { get; }
         = Error.Conflict("PRODUCT_CODE_ALREADY_EXISTS", "Já existe um produto cadastrado com o código informado.");
 
+    public static Error NotFound { get; }
+        = Error.NotFound("PRODUCT_NOT_FOUND", "O produto informado não foi encontrado.");
+
     public static Error NegativeBalance { get; }
         = Error.Validation("PRODUCT_NEGATIVE_BALANCE", "O saldo do produto não pode ser negativo.");
 
