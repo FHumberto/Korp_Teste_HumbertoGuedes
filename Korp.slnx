@@ -1,0 +1,27 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/Source/" />
+  <Folder Name="/Source/Estoque/">
+    <Project Path="src/Estoque/Korp.Estoque.Api/Korp.Estoque.Api.csproj" Id="d3859ec7-ee10-4597-957a-9775ae8564cc" />
+    <Project Path="src/Estoque/Korp.Estoque.Application/Korp.Estoque.Application.csproj" Id="809b9dc9-d1b3-4d26-bcc4-d46c3b36bff5" />
+    <Project Path="src/Estoque/Korp.Estoque.Domain/Korp.Estoque.Domain.csproj" Id="d1f17870-2b87-49af-a9c6-4cd11ba981d3" />
+    <Project Path="src/Estoque/Korp.Estoque.Infrastructure/Korp.Estoque.Infrastructure.csproj" Id="ba6c9937-d4a5-4fd5-ad12-6dbd98f2b774" />
+  </Folder>
+  <Folder Name="/Source/Faturamento/">
+    <Project Path="src/Faturamento/Korp.Faturamento.Api/Korp.Faturamento.Api.csproj" Id="e46531e6-10c3-4b0a-82ef-0528ade95d92" />
+    <Project Path="src/Faturamento/Korp.Faturamento.Application/Korp.Faturamento.Application.csproj" Id="294c5f1e-d675-46ce-bb74-10963ad2d660" />
+    <Project Path="src/Faturamento/Korp.Faturamento.Domain/Korp.Faturamento.Domain.csproj" Id="1d26fb5c-4135-4fe3-b9af-42772d07d0b1" />
+    <Project Path="src/Faturamento/Korp.Faturamento.Infrastructure/Korp.Faturamento.Infrastructure.csproj" Id="d8ea13ba-50e5-4fcb-adb5-997fe26a6ade" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="src/Estoque/Korp.Estoque.IntegrationTests/Korp.Estoque.IntegrationTests.csproj" Id="cd6ab892-dab5-4055-a625-e3b43749737d" />
+    <Project Path="src/Estoque/Korp.Estoque.UnitTests/Korp.Estoque.UnitTests.csproj" Id="88def5b6-38aa-4d7b-802b-45b27a153ff9" />
+    <Project Path="src/Faturamento/Korp.Faturamento.IntegrationTests/Korp.Faturamento.IntegrationTests.csproj" Id="2d0ec550-9977-4491-b3cb-4066d844a021" />
+    <Project Path="src/Faturamento/Korp.Faturamento.UnitTests/Korp.Faturamento.UnitTests.csproj" Id="796c0967-6078-48e6-ab23-c07ad10e41e8" />
+  </Folder>
+</Solution>
