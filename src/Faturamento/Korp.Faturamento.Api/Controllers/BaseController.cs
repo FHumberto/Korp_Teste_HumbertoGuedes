@@ -22,28 +22,22 @@ public class BaseController : ControllerBase
             _ => StatusCodes.Status500InternalServerError
         };
 
-        if (error.ValidationDetails is not null && error.ErrorType == ErrorType.Validation)
+        ProblemDetails problemDetails = new()
         {
-            ProblemDetails problemDetails = new()
-            {
-                Type = "https://datatracker.ietf.org/doc/html/rfc9110#section-15.5.1",
-                Title = error.Description,
-                Detail = error.Code,
-                Status = statusCode
-            };
+            Type = $"https://httpstatuses.com/{statusCode}",
+            Title = error.Description,
+            Detail = error.Description,
+            Status = statusCode,
+            Instance = HttpContext.Request.Path
+        };
 
+        problemDetails.Extensions["code"] = error.Code;
+        problemDetails.Extensions["traceId"] = HttpContext.TraceIdentifier;
+
+        if (error.ValidationDetails is not null && error.ErrorType == ErrorType.Validation)
             problemDetails.Extensions["errors"] = error.ValidationDetails;
-            problemDetails.Extensions["traceId"] = HttpContext.TraceIdentifier;
 
-            return StatusCode(statusCode, problemDetails);
-        }
-
-        return Problem
-        (
-            statusCode: statusCode,
-            detail: error.Code,
-            title: error.Description
-        );
+        return StatusCode(statusCode, problemDetails);
     }
 
     #endregion

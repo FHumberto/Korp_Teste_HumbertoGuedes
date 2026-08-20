@@ -31,9 +31,19 @@ public static class RateLimiterExtensions
             options.OnRejected = async (context, cancellationToken) =>
             {
                 context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+                context.HttpContext.Response.ContentType = "application/problem+json";
                 await context.HttpContext.Response.WriteAsJsonAsync
                 (
-                    new { message = "Você excedeu o limite de requisições. Tente novamente mais tarde." },
+                    new
+                    {
+                        type = "https://httpstatuses.com/429",
+                        title = "Limite de requisições excedido.",
+                        status = StatusCodes.Status429TooManyRequests,
+                        detail = "Você excedeu o limite de requisições. Tente novamente mais tarde.",
+                        instance = context.HttpContext.Request.Path.Value,
+                        code = "RATE_LIMIT_EXCEEDED",
+                        traceId = context.HttpContext.TraceIdentifier
+                    },
                     cancellationToken
                 );
             };

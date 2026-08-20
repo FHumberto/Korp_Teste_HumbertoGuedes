@@ -1,9 +1,12 @@
-using Korp.Faturamento.Domain.Abstractions.Types;
+﻿using Korp.Faturamento.Domain.Abstractions.Types;
 
 namespace Korp.Faturamento.Domain.Entities.Errors;
 
 public static class InvoiceErrors
 {
+    public static Error NotFound { get; }
+        = Error.NotFound("INVOICE_NOT_FOUND", "A nota não foi encontrada.");
+
     public static Error IdRequired { get; }
         = Error.Validation("INVOICE_ID_REQUIRED", "O identificador da nota é obrigatório.");
 

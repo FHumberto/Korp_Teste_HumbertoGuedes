@@ -3,6 +3,7 @@ using Korp.Faturamento.Application.Contracts.Persistence;
 using Korp.Faturamento.Application.Features.Invoice.CreateInvoice;
 using Shouldly;
 using InvoiceEntity = Korp.Faturamento.Domain.Entities.Invoice;
+using Korp.Faturamento.Domain.Enums;
 
 namespace Korp.Faturamento.UnitTests.Features.Invoice;
 
@@ -74,11 +75,18 @@ public sealed class CreateInvoiceHandlerTests
     {
         public InvoiceEntity? AddedInvoice { get; private set; }
 
+        public Task<InvoiceEntity?> GetByIdAsync(Guid invoiceId, CancellationToken cancellationToken) => Task.FromResult<InvoiceEntity?>(null);
+
+        public Task<IReadOnlyCollection<InvoiceEntity>> ListAsync(InvoiceStatus? status, CancellationToken cancellationToken) =>
+            Task.FromResult<IReadOnlyCollection<InvoiceEntity>>([]);
+
         public Task AddAsync(InvoiceEntity invoice, CancellationToken cancellationToken)
         {
             AddedInvoice = invoice;
             return Task.CompletedTask;
         }
+
+        public Task SaveChangesAsync(CancellationToken cancellationToken) => Task.CompletedTask;
     }
 
     private sealed class FakeInvoiceNumberGenerator : IInvoiceNumberGenerator
@@ -108,6 +116,11 @@ public sealed class CreateInvoiceHandlerTests
 
             return Task.FromResult(_products);
         }
+
+        public Task<DebitStockResult> DebitAsync(
+            DebitStockCommand command,
+            string idempotencyKey,
+            CancellationToken cancellationToken) => Task.FromResult(DebitStockResult.Succeeded);
     }
 
     private sealed class FixedTimeProvider(DateTimeOffset utcNow) : TimeProvider

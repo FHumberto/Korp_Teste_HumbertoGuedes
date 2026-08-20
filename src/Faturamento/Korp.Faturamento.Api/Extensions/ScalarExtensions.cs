@@ -28,13 +28,13 @@ public static class ScalarExtensions
 
     public static WebApplication UseScalarDocumentation(this WebApplication app)
     {
+        app.DescribeApiVersions();
+        app.MapOpenApi().WithDocumentPerVersion();
+
         if (!app.Environment.IsDevelopment())
         {
             return app;
         }
-
-        app.DescribeApiVersions();
-        app.MapOpenApi().WithDocumentPerVersion();
 
         IApiVersionDescriptionProvider provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 

@@ -79,6 +79,7 @@ public sealed class ExceptionMiddleware(IProblemDetailsService problemDetailsSer
         }
 
         problemDetails.Instance = httpContext.Request.Path;
+        problemDetails.Extensions["code"] = "UNEXPECTED_ERROR";
         problemDetails.Extensions["traceId"] = httpContext.TraceIdentifier;
 
         return problemDetails;
