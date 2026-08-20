@@ -10,11 +10,11 @@ public sealed class CreateProductValidator : AbstractValidator<CreateProductRequ
     {
         RuleFor(request => request.Code)
             .NotEmpty().WithMessage(ProductErrors.CodeRequired.Description)
-            .MaximumLength(ProductEntity.MaxCodeLength).WithMessage($"O código do produto deve possuir no máximo {ProductEntity.MaxCodeLength} caracteres.");
+            .MaximumLength(ProductEntity.MaxCodeLength).WithMessage(ProductErrors.CodeTooLong.Description);
 
         RuleFor(request => request.Description)
             .NotEmpty().WithMessage(ProductErrors.DescriptionRequired.Description)
-            .MaximumLength(ProductEntity.MaxDescriptionLength).WithMessage($"A descrição do produto deve possuir no máximo {ProductEntity.MaxDescriptionLength} caracteres.");
+            .MaximumLength(ProductEntity.MaxDescriptionLength).WithMessage(ProductErrors.DescriptionTooLong.Description);
 
         RuleFor(request => request.InitialBalance)
             .GreaterThanOrEqualTo(0)

@@ -3,6 +3,8 @@ using Korp.Estoque.Application.Abstractions.Wrappers;
 using Korp.Estoque.Application.Contracts.UseCases;
 using Korp.Estoque.Application.Features.Product.CreateProduct;
 using Korp.Estoque.Application.Features.Product.GetProduct;
+using Korp.Estoque.Application.Features.Product.ListProducts;
+using Korp.Estoque.Domain.Abstractions.Types;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Korp.Estoque.Api.Controllers.v1;
@@ -13,6 +15,13 @@ public sealed class ProductsController : BaseController
 {
     #region [ LEITURA ]
 
+    [HttpGet]
+    [ProducesResponseType<Paged<ListProductsResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ListProductsAsync([FromServices] IListProductsUseCase useCase, [FromQuery] ListProductsRequest request, CancellationToken ct)
+    {
+        return (await useCase.ExecuteAsync(request, ct)).Match(onSuccess: Ok, onFailure: Problem);
+    }
     [HttpGet("{id:guid}")]
     [ProducesResponseType<GetProductResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]

@@ -4,7 +4,9 @@ namespace Korp.Estoque.Application.Contracts.Persistence;
 
 public interface IProductRepository
 {
-    Task<bool> TryAddAsync(Product product, CancellationToken cancellationToken);
-
     Task<Product?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+
+    Task<Paged<Product>> ListAsync(int pageNumber, int pageSize, CancellationToken cancellationToken);
+
+    Task<bool> TryAddAsync(Product product, CancellationToken cancellationToken);
 }

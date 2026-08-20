@@ -2,6 +2,7 @@ using Korp.Estoque.Application.Abstractions.Wrappers;
 using Korp.Estoque.Application.Contracts.Persistence;
 using Korp.Estoque.Application.Features.Product.CreateProduct;
 using Korp.Estoque.Domain.Entities.Errors;
+using Korp.Estoque.Domain.Abstractions.Types;
 using Shouldly;
 using ProductEntity = Korp.Estoque.Domain.Entities.Product;
 
@@ -90,5 +91,11 @@ public sealed class CreateProductHandlerTests
 
         public Task<ProductEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken) =>
             Task.FromResult<ProductEntity?>(null);
+
+        public Task<IReadOnlyList<ProductEntity>> GetByIdsAsync(IReadOnlyCollection<Guid> ids, CancellationToken cancellationToken) =>
+            Task.FromResult<IReadOnlyList<ProductEntity>>([]);
+
+        public Task<Paged<ProductEntity>> ListAsync(int pageNumber, int pageSize, CancellationToken cancellationToken) =>
+            Task.FromResult(new Paged<ProductEntity>([], 0, pageNumber, pageSize));
     }
 }
