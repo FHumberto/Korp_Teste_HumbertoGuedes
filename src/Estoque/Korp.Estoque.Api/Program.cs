@@ -11,14 +11,13 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 WebApplication app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-    app.MapOpenApi();
-
 app.UseExceptionHandler();
-app.UseRateLimiter();
-app.UseCorsPolicies();
 app.UseHttpsRedirection();
+app.UseCorsPolicies();
+app.UseRateLimiter();
 app.UseAuthorization();
+app.UseScalarDocumentation();
+
 app.MapControllers();
 
 await app.RunAsync();
