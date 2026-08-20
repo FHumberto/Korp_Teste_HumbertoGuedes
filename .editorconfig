@@ -271,3 +271,8 @@ end_of_line = crlf
 # Ignora análise nas migrations do EF Core
 [**/Migrations/*.cs]
 generated_code = true
+
+[*.cs]
+
+# IDE0290: Use primary constructor
+dotnet_diagnostic.IDE0290.severity = none

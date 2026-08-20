@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "MULTI",
+    "Projects": [
+      {
+        "Path": "src\\Estoque\\Korp.Estoque.Api\\Korp.Estoque.Api.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "src\\Faturamento\\Korp.Faturamento.Api\\Korp.Faturamento.Api.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]
