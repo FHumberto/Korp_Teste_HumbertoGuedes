@@ -4,6 +4,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>Korp.Estoque.Api-8c08618d-79f4-4f76-97c8-791980c9e753</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

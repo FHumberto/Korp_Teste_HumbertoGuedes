@@ -15,6 +15,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 
 app.UseExceptionHandler();
+app.UseRateLimiter();
 app.UseCorsPolicies();
 app.UseHttpsRedirection();
 app.UseAuthorization();

@@ -11,6 +11,7 @@ public static class DependencyInjection
         services.AddProblemDetails();
         services.AddExceptionHandler<ExceptionMiddleware>();
         services.AddCorsPolicies(configuration);
+        services.AddRateLimiterPolicies(configuration);
         services.AddControllers();
         services.AddOpenApi();
 
