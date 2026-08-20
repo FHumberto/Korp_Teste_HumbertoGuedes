@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
-import { Observable } from 'rxjs';
+import { EMPTY, Observable, expand, reduce } from 'rxjs';
 import { API_ENDPOINTS } from '../../../core/config/api-endpoints';
 import { CreatedProduct, CreateProductRequest, Paged, Product, ProductSummary } from '../models/product.models';
 
@@ -16,6 +16,13 @@ export class ProductsApiService {
   list(pageNumber = 1, pageSize = 20): Observable<Paged<ProductSummary>> {
     const params = new HttpParams().set('pageNumber', pageNumber).set('pageSize', pageSize);
     return this.http.get<Paged<ProductSummary>>(`${this.endpoints.inventory}/products`, { params });
+  }
+
+  listAll(): Observable<readonly ProductSummary[]> {
+    return this.list(1, 100).pipe(
+      expand((page) => page.pageNumber < page.totalPages ? this.list(page.pageNumber + 1, 100) : EMPTY),
+      reduce((products, page) => [...products, ...page.items], [] as readonly ProductSummary[]),
+    );
   }
 
   getById(productId: string): Observable<Product> {

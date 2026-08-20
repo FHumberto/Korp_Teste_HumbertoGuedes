@@ -17,10 +17,7 @@ public sealed class InvoicesController : BaseController
     [HttpGet]
     [ProducesResponseType<IReadOnlyCollection<ListInvoicesResponse>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> ListInvoicesAsync(
-        [FromServices] IListInvoicesUseCase useCase,
-        [FromQuery] ListInvoicesRequest request,
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> ListInvoicesAsync([FromServices] IListInvoicesUseCase useCase, [FromQuery] ListInvoicesRequest request, CancellationToken cancellationToken)
     {
         return (await useCase.ExecuteAsync(request, cancellationToken)).Match(onSuccess: Ok, onFailure: Problem);
     }
@@ -28,10 +25,7 @@ public sealed class InvoicesController : BaseController
     [HttpGet("{id:guid}")]
     [ProducesResponseType<GetInvoiceResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetInvoiceByIdAsync(
-        [FromServices] IGetInvoiceUseCase useCase,
-        Guid id,
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> GetInvoiceByIdAsync([FromServices] IGetInvoiceUseCase useCase, Guid id, CancellationToken cancellationToken)
     {
         return (await useCase.ExecuteAsync(id, cancellationToken)).Match(onSuccess: Ok, onFailure: Problem);
     }
@@ -45,10 +39,7 @@ public sealed class InvoicesController : BaseController
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status503ServiceUnavailable)]
-    public async Task<IActionResult> CreateInvoiceAsync(
-        [FromServices] ICreateInvoiceUseCase useCase,
-        [FromBody] CreateInvoiceRequest request,
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateInvoiceAsync([FromServices] ICreateInvoiceUseCase useCase, [FromBody] CreateInvoiceRequest request, CancellationToken cancellationToken)
     {
         return (await useCase.ExecuteAsync(request, cancellationToken)).Match(
             onSuccess: response => Created($"/api/v1/invoices/{response.Id}", response),
@@ -60,10 +51,7 @@ public sealed class InvoicesController : BaseController
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status503ServiceUnavailable)]
-    public async Task<IActionResult> CloseInvoiceAsync(
-        [FromServices] ICloseInvoiceUseCase useCase,
-        Guid id,
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> CloseInvoiceAsync([FromServices] ICloseInvoiceUseCase useCase, Guid id, CancellationToken cancellationToken)
     {
         return (await useCase.ExecuteAsync(id, cancellationToken)).Match(onSuccess: Ok, onFailure: Problem);
     }

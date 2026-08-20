@@ -32,4 +32,12 @@ describe('ProductsApiService', () => {
     expect(request.request.body).toEqual(body);
     request.flush({ id: crypto.randomUUID(), code: body.code, description: body.description, balance: 10, createdAt: new Date().toISOString() });
   });
+
+  it('listAll should load every available page', () => {
+    let result: readonly unknown[] = [];
+    api.listAll().subscribe((products) => result = products);
+    http.expectOne((request) => request.params.get('pageNumber') === '1' && request.params.get('pageSize') === '100').flush({ items: [{ id: '1', code: 'A', description: 'A', balance: 1 }], totalRecords: 101, pageNumber: 1, pageSize: 100, totalPages: 2 });
+    http.expectOne((request) => request.params.get('pageNumber') === '2' && request.params.get('pageSize') === '100').flush({ items: [{ id: '2', code: 'B', description: 'B', balance: 2 }], totalRecords: 101, pageNumber: 2, pageSize: 100, totalPages: 2 });
+    expect(result).toHaveLength(2);
+  });
 });

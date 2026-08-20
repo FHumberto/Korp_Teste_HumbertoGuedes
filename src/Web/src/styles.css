@@ -16,4 +16,80 @@
   select {
     touch-action: manipulation;
   }
+
+  :focus-visible {
+    outline: 2px solid var(--color-blue-700);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--color-blue-200);
+    color: var(--color-slate-950);
+  }
+}
+
+.print-sheet {
+  border: 1px solid var(--color-slate-200);
+  border-radius: 0.75rem;
+  background: white;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@page {
+  size: A4 portrait;
+  margin: 14mm;
+}
+
+@media print {
+  html,
+  body {
+    width: 210mm;
+    min-width: 0;
+    background: white !important;
+    color: black !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  main#main-content {
+    max-width: none;
+    padding: 0;
+  }
+
+  .print-sheet {
+    width: 100%;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+  }
+
+  .invoice-items-table thead {
+    display: table-header-group;
+  }
+
+  .invoice-items-table tfoot {
+    display: table-footer-group;
+  }
+
+  .invoice-items-table tr {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  a[href]::after {
+    content: none !important;
+  }
 }

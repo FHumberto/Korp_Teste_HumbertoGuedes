@@ -18,4 +18,24 @@ describe('ProductListPage', () => {
     expect(fixture.nativeElement.textContent).toContain('Produto de teste');
     http.verify();
   });
+
+  it('should open the product form in a dialog', () => {
+    TestBed.configureTestingModule({ imports: [ProductListPage], providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([]), { provide: API_ENDPOINTS, useValue: { inventory: 'http://inventory/api/v1', billing: '' } }] });
+    const fixture = TestBed.createComponent(ProductListPage);
+    const http = TestBed.inject(HttpTestingController);
+    fixture.detectChanges();
+    http.expectOne((request) => request.url === 'http://inventory/api/v1/products').flush({ items: [], totalRecords: 0, pageNumber: 1, pageSize: 20, totalPages: 0 });
+    fixture.detectChanges();
+
+    const dialog = fixture.nativeElement.querySelector('dialog') as HTMLDialogElement;
+    dialog.showModal = () => dialog.setAttribute('open', '');
+    dialog.close = () => dialog.removeAttribute('open');
+    fixture.nativeElement.querySelector('button').click();
+    fixture.detectChanges();
+
+    expect(dialog.open).toBe(true);
+    expect(dialog.textContent).toContain('Novo produto');
+    expect(dialog.querySelector('form')).not.toBeNull();
+    http.verify();
+  });
 });

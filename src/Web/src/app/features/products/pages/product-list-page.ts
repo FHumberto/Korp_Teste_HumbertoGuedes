@@ -1,6 +1,6 @@
-import { DestroyRef, Component, computed, inject, signal } from '@angular/core';
+import { DestroyRef, Component, ElementRef, computed, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { finalize } from 'rxjs';
 import { ApiError } from '../../../core/http/problem-details';
 import { mapApiError } from '../../../core/http/api-error.mapper';
@@ -9,14 +9,15 @@ import { FeedbackMessage } from '../../../shared/components/feedback-message';
 import { LoadingIndicator } from '../../../shared/components/loading-indicator';
 import { ProductsApiService } from '../data-access/products-api.service';
 import { Paged, ProductSummary } from '../models/product.models';
+import { ProductCreateForm } from '../components/product-create-form';
 
 @Component({
-  imports: [EmptyState, FeedbackMessage, LoadingIndicator, RouterLink],
+  imports: [EmptyState, FeedbackMessage, LoadingIndicator, ProductCreateForm],
   template: `
     <section>
       <div class="flex flex-wrap items-start justify-between gap-4">
         <div><p class="text-sm font-semibold text-blue-700">Estoque</p><h1 class="mt-1 text-3xl font-bold tracking-tight">Produtos</h1><p class="mt-2 text-slate-600">Consulte os produtos cadastrados e seus saldos atuais.</p></div>
-        <a routerLink="/products/new" class="rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700">Novo produto</a>
+        <button type="button" (click)="openCreateDialog()" class="rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700">Novo produto</button>
       </div>
 
       <div class="mt-6 space-y-4">
@@ -38,16 +39,28 @@ import { Paged, ProductSummary } from '../models/product.models';
               </div>
               <div class="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 px-4 py-3 text-sm text-slate-600">
                 <p>{{ rangeLabel() }} de {{ currentPage.totalRecords }} produtos</p>
-                <div class="flex gap-2">
+                <nav class="flex gap-2" aria-label="Paginação de produtos">
                   <button type="button" (click)="previousPage()" [disabled]="currentPage.pageNumber <= 1 || loading()" class="rounded-md border border-slate-300 px-3 py-2 font-semibold text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50">Anterior</button>
                   <span class="flex items-center px-2" aria-current="page">Página {{ currentPage.pageNumber }} de {{ currentPage.totalPages }}</span>
                   <button type="button" (click)="nextPage()" [disabled]="currentPage.pageNumber >= currentPage.totalPages || loading()" class="rounded-md border border-slate-300 px-3 py-2 font-semibold text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50">Próxima</button>
-                </div>
+                </nav>
               </div>
             </div>
           }
         }
       </div>
+
+      <dialog #createDialog (cancel)="closeCreateDialog($event)" class="m-auto w-[calc(100%-2rem)] max-w-2xl rounded-xl bg-white p-0 text-slate-950 shadow-2xl backdrop:bg-slate-950/55">
+        <div class="max-h-[calc(100vh-2rem)] overflow-y-auto p-6 sm:p-8">
+          <div class="mb-6 flex items-start justify-between gap-4">
+            <div><p class="text-sm font-semibold text-blue-700">Estoque</p><h2 id="create-product-title" class="mt-1 text-2xl font-bold tracking-tight">Novo produto</h2><p class="mt-2 text-sm text-slate-600">Cadastre os dados que serão utilizados nas notas fiscais.</p></div>
+            <button type="button" (click)="closeCreateDialog()" class="rounded-md p-2 text-2xl leading-none text-slate-500 hover:bg-slate-100 hover:text-slate-800" aria-label="Fechar cadastro de produto">×</button>
+          </div>
+          @if (createDialogOpen()) {
+            <app-product-create-form (created)="onProductCreated()" (cancelled)="closeCreateDialog()" />
+          }
+        </div>
+      </dialog>
     </section>
   `,
 })
@@ -56,11 +69,13 @@ export class ProductListPage {
   private readonly destroyRef = inject(DestroyRef);
   private readonly route = inject(ActivatedRoute);
   private readonly pageSize = 20;
+  private readonly createDialog = viewChild.required<ElementRef<HTMLDialogElement>>('createDialog');
 
   protected readonly page = signal<Paged<ProductSummary> | null>(null);
   protected readonly loading = signal(true);
   protected readonly error = signal<ApiError | null>(null);
   protected readonly created = signal(this.route.snapshot.queryParamMap.get('created') === 'true');
+  protected readonly createDialogOpen = signal(false);
   protected readonly rangeLabel = computed(() => {
     const current = this.page();
     if (!current || current.totalRecords === 0) return '0';
@@ -73,6 +88,9 @@ export class ProductListPage {
 
   protected previousPage(): void { const current = this.page(); if (current && current.pageNumber > 1) this.loadPage(current.pageNumber - 1); }
   protected nextPage(): void { const current = this.page(); if (current && current.pageNumber < current.totalPages) this.loadPage(current.pageNumber + 1); }
+  protected openCreateDialog(): void { this.created.set(false); this.createDialogOpen.set(true); this.createDialog().nativeElement.showModal(); }
+  protected closeCreateDialog(event?: Event): void { event?.preventDefault(); this.createDialog().nativeElement.close(); this.createDialogOpen.set(false); }
+  protected onProductCreated(): void { this.closeCreateDialog(); this.created.set(true); this.loadPage(1); }
 
   private loadPage(pageNumber: number): void {
     this.loading.set(true);
