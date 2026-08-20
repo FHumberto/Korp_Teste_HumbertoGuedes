@@ -19,7 +19,12 @@ public static class SerilogExtensions
             .WriteTo.Console()
             .WriteTo.MSSqlServer(
                 connectionString,
-                new MSSqlServerSinkOptions { TableName = "error_logs", AutoCreateSqlTable = true },
+                new MSSqlServerSinkOptions
+                {
+                    TableName = "error_logs",
+                    AutoCreateSqlDatabase = true,
+                    AutoCreateSqlTable = true
+                },
                 restrictedToMinimumLevel: LogEventLevel.Error));
 
         return builder;

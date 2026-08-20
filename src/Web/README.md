@@ -1,59 +1,55 @@
-# Web
+# Frontend Angular
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.1.5.
+Interface do sistema Korp para cadastro de produtos e emissão simplificada de notas fiscais.
 
-## Development server
+## Versões suportadas
 
-To start a local development server, run:
+- Node.js `24.19.0` (registrado em `.nvmrc`);
+- npm `11.17.0`;
+- Angular `22.1.3`;
+- Angular CLI e build `22.1.5`.
 
-```bash
-ng serve
+As dependências diretas usam versões exatas. O `package-lock.json` é parte obrigatória do repositório e determina toda a árvore transitiva.
+
+## Instalação reproduzível
+
+Execute na pasta `src/Web`:
+
+```powershell
+npm ci
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Use `npm ci`, e não `npm install`, em ambientes de desenvolvimento limpos, CI e preparação da entrega. O comando falha quando `package.json` e `package-lock.json` divergem, evitando instalações não reproduzíveis.
 
-## Code scaffolding
+## Executar
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```powershell
+npm start
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+A aplicação estará disponível em `http://localhost:4200/`.
 
-```bash
-ng generate --help
+Para executar o ambiente completo em containers, use a raiz do repositório:
+
+```powershell
+docker compose up -d --build
 ```
 
-## Building
+Nesse modo, o Angular é compilado em uma imagem Node multi-stage e servido pelo Nginx, que também encaminha as chamadas às duas APIs pela rede interna do Compose.
 
-To build the project run:
+## Validar
 
-```bash
-ng build
+```powershell
+npm test -- --watch=false
+npm run build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Atualização de dependências
 
-## Running unit tests
+Não execute `npm update` como parte do fluxo normal. Atualizações devem ser feitas deliberadamente em mudança isolada:
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+1. escolha e registre as novas versões exatas no `package.json`;
+2. regenere o `package-lock.json`;
+3. execute `npm ci` em uma instalação limpa;
+4. execute testes e build;
+5. versione juntos `package.json` e `package-lock.json`.

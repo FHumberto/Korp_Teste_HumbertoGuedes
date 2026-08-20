@@ -9,10 +9,6 @@ public static class DatabaseMigrationExtensions
         await using AsyncServiceScope scope = serviceProvider.CreateAsyncScope();
         BillingDbContext dbContext = scope.ServiceProvider.GetRequiredService<BillingDbContext>();
 
-        IEnumerable<string> pendingMigrations = await dbContext.Database.GetPendingMigrationsAsync(cancellationToken);
-        if (!pendingMigrations.Any())
-            return;
-
         await dbContext.Database.MigrateAsync(cancellationToken);
     }
 }
