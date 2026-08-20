@@ -21,7 +21,10 @@ public sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
         ConfigureStructure(builder);
     }
 
-    public static void ConfigureConstraints(EntityTypeBuilder<Product> builder) => builder.ToTable(tableBuilder => { tableBuilder.HasCheckConstraint(BalanceCheckConstraintName, "[Balance] >= 0"); });
+    public static void ConfigureConstraints(EntityTypeBuilder<Product> builder)
+    {
+        builder.ToTable(tableBuilder => { tableBuilder.HasCheckConstraint(BalanceCheckConstraintName, "[Balance] >= 0"); });
+    }
 
     private static void ConfigureStructure(EntityTypeBuilder<Product> builder)
     {
