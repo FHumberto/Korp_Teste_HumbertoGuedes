@@ -24,9 +24,8 @@ public sealed class CreateProductHandler(IValidator<CreateProductRequest> valida
 
         bool productCreated = await productRepository.TryAddAsync(product, cancellationToken);
 
-        if (!productCreated)
-            return Result<CreateProductResponse>.Failure(ProductErrors.CodeAlreadyExists);
-
-        return Result<CreateProductResponse>.Success(new CreateProductResponse(product.Id, product.Code, product.Description, product.Balance, product.CreatedAt));
+        return !productCreated
+            ? Result<CreateProductResponse>.Failure(ProductErrors.CodeAlreadyExists)
+            : Result<CreateProductResponse>.Success(new CreateProductResponse(product.Id, product.Code, product.Description, product.Balance, product.CreatedAt));
     }
 }

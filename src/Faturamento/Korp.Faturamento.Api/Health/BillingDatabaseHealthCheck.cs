@@ -1,5 +1,4 @@
-using Korp.Faturamento.Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
+﻿using Korp.Faturamento.Infrastructure.Persistence;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Korp.Faturamento.Api.Health;

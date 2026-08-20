@@ -1,3 +1,4 @@
+﻿using Korp.Faturamento.Application.Abstractions.Wrappers;
 using Korp.Faturamento.Application.Contracts.Persistence;
 using Korp.Faturamento.Application.Features.Invoice.ListInvoices;
 using Korp.Faturamento.Domain.Enums;
@@ -16,7 +17,7 @@ public sealed class ListInvoicesHandlerTests
         var repository = new FakeInvoiceRepository([invoice]);
         var handler = new ListInvoicesHandler(new ListInvoicesValidator(), repository);
 
-        var result = await handler.ExecuteAsync(new ListInvoicesRequest { Status = "open" }, CancellationToken.None);
+        Result<IReadOnlyCollection<ListInvoicesResponse>> result = await handler.ExecuteAsync(new ListInvoicesRequest { Status = "open" }, CancellationToken.None);
 
         result.IsSuccess.ShouldBeTrue();
         result.Value.ShouldHaveSingleItem().ItemCount.ShouldBe(1);
@@ -29,7 +30,7 @@ public sealed class ListInvoicesHandlerTests
         var repository = new FakeInvoiceRepository([]);
         var handler = new ListInvoicesHandler(new ListInvoicesValidator(), repository);
 
-        var result = await handler.ExecuteAsync(new ListInvoicesRequest { Status = "cancelled" }, CancellationToken.None);
+        Result<IReadOnlyCollection<ListInvoicesResponse>> result = await handler.ExecuteAsync(new ListInvoicesRequest { Status = "cancelled" }, CancellationToken.None);
 
         result.IsSuccess.ShouldBeFalse();
         result.Error!.Code.ShouldBe("VALIDATION_ERROR");

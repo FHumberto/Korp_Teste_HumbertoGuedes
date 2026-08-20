@@ -1,9 +1,10 @@
+﻿using Korp.Faturamento.Application.Abstractions.Wrappers;
 using Korp.Faturamento.Application.Contracts.Gateways;
 using Korp.Faturamento.Application.Contracts.Persistence;
 using Korp.Faturamento.Application.Features.Invoice.CreateInvoice;
+using Korp.Faturamento.Domain.Enums;
 using Shouldly;
 using InvoiceEntity = Korp.Faturamento.Domain.Entities.Invoice;
-using Korp.Faturamento.Domain.Enums;
 
 namespace Korp.Faturamento.UnitTests.Features.Invoice;
 
@@ -15,13 +16,13 @@ public sealed class CreateInvoiceHandlerTests
         Guid productId = Guid.NewGuid();
         DateTimeOffset now = new(2026, 8, 20, 12, 0, 0, TimeSpan.Zero);
         var repository = new FakeInvoiceRepository();
-        var handler = CreateHandler(
+        CreateInvoiceHandler handler = CreateHandler(
             new FakeInventoryGateway([new(productId, "PROD-001", "Produto confiável", 10)]),
             repository,
             new FixedTimeProvider(now));
         var request = new CreateInvoiceRequest { Items = [new(productId, 2)] };
 
-        var result = await handler.ExecuteAsync(request, CancellationToken.None);
+        Result<CreateInvoiceResponse> result = await handler.ExecuteAsync(request, CancellationToken.None);
 
         result.IsSuccess.ShouldBeTrue();
         result.Value.Number.ShouldBe(42);
@@ -37,10 +38,10 @@ public sealed class CreateInvoiceHandlerTests
     public async Task Execute_WhenProductDoesNotExist_ShouldReturnProductNotFound()
     {
         var repository = new FakeInvoiceRepository();
-        var handler = CreateHandler(new FakeInventoryGateway([]), repository, TimeProvider.System);
+        CreateInvoiceHandler handler = CreateHandler(new FakeInventoryGateway([]), repository, TimeProvider.System);
         var request = new CreateInvoiceRequest { Items = [new(Guid.NewGuid(), 1)] };
 
-        var result = await handler.ExecuteAsync(request, CancellationToken.None);
+        Result<CreateInvoiceResponse> result = await handler.ExecuteAsync(request, CancellationToken.None);
 
         result.IsSuccess.ShouldBeFalse();
         result.Error!.Code.ShouldBe("PRODUCT_NOT_FOUND");
@@ -51,10 +52,10 @@ public sealed class CreateInvoiceHandlerTests
     public async Task Execute_WhenInventoryIsUnavailable_ShouldReturnServiceUnavailable()
     {
         var repository = new FakeInvoiceRepository();
-        var handler = CreateHandler(new FakeInventoryGateway(new InventoryUnavailableException("Falha")), repository, TimeProvider.System);
+        CreateInvoiceHandler handler = CreateHandler(new FakeInventoryGateway(new InventoryUnavailableException("Falha")), repository, TimeProvider.System);
         var request = new CreateInvoiceRequest { Items = [new(Guid.NewGuid(), 1)] };
 
-        var result = await handler.ExecuteAsync(request, CancellationToken.None);
+        Result<CreateInvoiceResponse> result = await handler.ExecuteAsync(request, CancellationToken.None);
 
         result.IsSuccess.ShouldBeFalse();
         result.Error!.Code.ShouldBe("INVENTORY_UNAVAILABLE");
@@ -109,13 +110,7 @@ public sealed class CreateInvoiceHandlerTests
 
         public Task<IReadOnlyCollection<InventoryProduct>> GetProductsByIdsAsync(
             IReadOnlyCollection<Guid> productIds,
-            CancellationToken cancellationToken)
-        {
-            if (_exception is not null)
-                throw _exception;
-
-            return Task.FromResult(_products);
-        }
+            CancellationToken cancellationToken) => _exception is not null ? throw _exception : Task.FromResult(_products);
 
         public Task<DebitStockResult> DebitAsync(
             DebitStockCommand command,

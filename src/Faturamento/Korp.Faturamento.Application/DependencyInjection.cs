@@ -1,7 +1,7 @@
-using FluentValidation;
+﻿using FluentValidation;
 using Korp.Faturamento.Application.Contracts.UseCases;
-using Korp.Faturamento.Application.Features.Invoice.CreateInvoice;
 using Korp.Faturamento.Application.Features.Invoice.CloseInvoice;
+using Korp.Faturamento.Application.Features.Invoice.CreateInvoice;
 using Korp.Faturamento.Application.Features.Invoice.GetInvoice;
 using Korp.Faturamento.Application.Features.Invoice.ListInvoices;
 using Microsoft.Extensions.DependencyInjection;

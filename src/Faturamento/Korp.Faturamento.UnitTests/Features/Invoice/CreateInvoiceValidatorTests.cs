@@ -1,3 +1,4 @@
+﻿using FluentValidation.Results;
 using Korp.Faturamento.Application.Features.Invoice.CreateInvoice;
 using Shouldly;
 
@@ -12,7 +13,7 @@ public sealed class CreateInvoiceValidatorTests
     {
         var request = new CreateInvoiceRequest { Items = [] };
 
-        var result = await _validator.ValidateAsync(request);
+        ValidationResult result = await _validator.ValidateAsync(request);
 
         result.IsValid.ShouldBeFalse();
     }
@@ -26,7 +27,7 @@ public sealed class CreateInvoiceValidatorTests
             Items = [new(productId, 1), new(productId, 2)]
         };
 
-        var result = await _validator.ValidateAsync(request);
+        ValidationResult result = await _validator.ValidateAsync(request);
 
         result.IsValid.ShouldBeFalse();
         result.Errors.ShouldContain(error => error.ErrorMessage.Contains("já foi incluído"));
@@ -42,7 +43,7 @@ public sealed class CreateInvoiceValidatorTests
             Items = [new(Guid.NewGuid(), quantity)]
         };
 
-        var result = await _validator.ValidateAsync(request);
+        ValidationResult result = await _validator.ValidateAsync(request);
 
         result.IsValid.ShouldBeFalse();
     }

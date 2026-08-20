@@ -1,3 +1,4 @@
+﻿using Korp.Faturamento.Application.Abstractions.Wrappers;
 using Korp.Faturamento.Application.Contracts.Gateways;
 using Korp.Faturamento.Application.Contracts.Persistence;
 using Korp.Faturamento.Application.Features.Invoice.CloseInvoice;
@@ -17,9 +18,9 @@ public sealed class CloseInvoiceHandlerTests
         InvoiceEntity invoice = CreateOpenInvoice();
         var repository = new FakeInvoiceRepository(invoice);
         var gateway = new FakeInventoryGateway(DebitStockResult.Succeeded);
-        var handler = CreateHandler(repository, gateway);
+        CloseInvoiceHandler handler = CreateHandler(repository, gateway);
 
-        var result = await handler.ExecuteAsync(invoice.Id, CancellationToken.None);
+        Result<CloseInvoiceResponse> result = await handler.ExecuteAsync(invoice.Id, CancellationToken.None);
 
         result.IsSuccess.ShouldBeTrue();
         result.Value.Status.ShouldBe("closed");
@@ -39,9 +40,9 @@ public sealed class CloseInvoiceHandlerTests
     {
         InvoiceEntity invoice = CreateOpenInvoice();
         var repository = new FakeInvoiceRepository(invoice);
-        var handler = CreateHandler(repository, new FakeInventoryGateway(new DebitStockResult(status)));
+        CloseInvoiceHandler handler = CreateHandler(repository, new FakeInventoryGateway(new DebitStockResult(status)));
 
-        var result = await handler.ExecuteAsync(invoice.Id, CancellationToken.None);
+        Result<CloseInvoiceResponse> result = await handler.ExecuteAsync(invoice.Id, CancellationToken.None);
 
         result.IsSuccess.ShouldBeFalse();
         result.Error!.Code.ShouldBe(expectedCode);
@@ -54,9 +55,9 @@ public sealed class CloseInvoiceHandlerTests
     {
         InvoiceEntity invoice = CreateOpenInvoice();
         var repository = new FakeInvoiceRepository(invoice);
-        var handler = CreateHandler(repository, new FakeInventoryGateway(new InventoryUnavailableException("Falha")));
+        CloseInvoiceHandler handler = CreateHandler(repository, new FakeInventoryGateway(new InventoryUnavailableException("Falha")));
 
-        var result = await handler.ExecuteAsync(invoice.Id, CancellationToken.None);
+        Result<CloseInvoiceResponse> result = await handler.ExecuteAsync(invoice.Id, CancellationToken.None);
 
         result.IsSuccess.ShouldBeFalse();
         result.Error!.Code.ShouldBe("INVENTORY_UNAVAILABLE");
@@ -70,9 +71,9 @@ public sealed class CloseInvoiceHandlerTests
         InvoiceEntity invoice = CreateOpenInvoice();
         invoice.Close(ClosedAt.AddMinutes(-1));
         var gateway = new FakeInventoryGateway(DebitStockResult.Succeeded);
-        var handler = CreateHandler(new FakeInvoiceRepository(invoice), gateway);
+        CloseInvoiceHandler handler = CreateHandler(new FakeInvoiceRepository(invoice), gateway);
 
-        var result = await handler.ExecuteAsync(invoice.Id, CancellationToken.None);
+        Result<CloseInvoiceResponse> result = await handler.ExecuteAsync(invoice.Id, CancellationToken.None);
 
         result.IsSuccess.ShouldBeFalse();
         result.Error!.Code.ShouldBe("INVOICE_ALREADY_CLOSED");
@@ -87,10 +88,10 @@ public sealed class CloseInvoiceHandlerTests
         var gateway = new FakeInventoryGateway(
             new InventoryUnavailableException("Resposta perdida"),
             DebitStockResult.Succeeded);
-        var handler = CreateHandler(repository, gateway);
+        CloseInvoiceHandler handler = CreateHandler(repository, gateway);
 
-        var firstResult = await handler.ExecuteAsync(invoice.Id, CancellationToken.None);
-        var secondResult = await handler.ExecuteAsync(invoice.Id, CancellationToken.None);
+        Result<CloseInvoiceResponse> firstResult = await handler.ExecuteAsync(invoice.Id, CancellationToken.None);
+        Result<CloseInvoiceResponse> secondResult = await handler.ExecuteAsync(invoice.Id, CancellationToken.None);
 
         firstResult.IsSuccess.ShouldBeFalse();
         secondResult.IsSuccess.ShouldBeTrue();
@@ -141,10 +142,7 @@ public sealed class CloseInvoiceHandlerTests
             ReceivedKeys.Add(idempotencyKey);
             object outcome = _outcomes.Dequeue();
 
-            if (outcome is Exception exception)
-                throw exception;
-
-            return Task.FromResult((DebitStockResult)outcome);
+            return outcome is Exception exception ? throw exception : Task.FromResult((DebitStockResult)outcome);
         }
     }
 

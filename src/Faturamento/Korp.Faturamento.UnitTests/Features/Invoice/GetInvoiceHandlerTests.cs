@@ -1,3 +1,4 @@
+﻿using Korp.Faturamento.Application.Abstractions.Wrappers;
 using Korp.Faturamento.Application.Contracts.Persistence;
 using Korp.Faturamento.Application.Features.Invoice.GetInvoice;
 using Korp.Faturamento.Domain.Enums;
@@ -14,7 +15,7 @@ public sealed class GetInvoiceHandlerTests
         InvoiceEntity invoice = CreateInvoice(7);
         var handler = new GetInvoiceHandler(new FakeInvoiceRepository(invoice));
 
-        var result = await handler.ExecuteAsync(invoice.Id, CancellationToken.None);
+        Result<GetInvoiceResponse> result = await handler.ExecuteAsync(invoice.Id, CancellationToken.None);
 
         result.IsSuccess.ShouldBeTrue();
         result.Value.Number.ShouldBe(7);
@@ -27,7 +28,7 @@ public sealed class GetInvoiceHandlerTests
     {
         var handler = new GetInvoiceHandler(new FakeInvoiceRepository(null));
 
-        var result = await handler.ExecuteAsync(Guid.NewGuid(), CancellationToken.None);
+        Result<GetInvoiceResponse> result = await handler.ExecuteAsync(Guid.NewGuid(), CancellationToken.None);
 
         result.IsSuccess.ShouldBeFalse();
         result.Error!.Code.ShouldBe("INVOICE_NOT_FOUND");

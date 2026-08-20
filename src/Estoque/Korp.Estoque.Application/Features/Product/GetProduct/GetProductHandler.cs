@@ -12,9 +12,8 @@ public sealed class GetProductHandler(IProductRepository productRepository) : IG
     {
         ProductEntity? product = await productRepository.GetByIdAsync(id, cancellationToken);
 
-        if (product is null)
-            return Result<GetProductResponse>.Failure(ProductErrors.NotFound);
-
-        return Result<GetProductResponse>.Success(new GetProductResponse(product.Id, product.Code, product.Description, product.Balance, product.CreatedAt, product.UpdatedAt));
+        return product is null
+            ? Result<GetProductResponse>.Failure(ProductErrors.NotFound)
+            : Result<GetProductResponse>.Success(new GetProductResponse(product.Id, product.Code, product.Description, product.Balance, product.CreatedAt, product.UpdatedAt));
     }
 }

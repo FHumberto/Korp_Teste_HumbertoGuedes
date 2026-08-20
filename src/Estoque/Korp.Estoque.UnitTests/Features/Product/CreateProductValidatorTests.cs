@@ -1,5 +1,4 @@
 ﻿using FluentValidation.Results;
-using Korp.Estoque.Application.Features.Product;
 using Korp.Estoque.Application.Features.Product.CreateProduct;
 using Shouldly;
 using ProductEntity = Korp.Estoque.Domain.Entities.Product;

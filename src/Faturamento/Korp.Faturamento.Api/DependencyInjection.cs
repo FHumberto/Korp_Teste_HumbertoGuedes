@@ -1,6 +1,6 @@
-using Korp.Faturamento.Api.Extensions;
-using Korp.Faturamento.Api.Middlewares;
+﻿using Korp.Faturamento.Api.Extensions;
 using Korp.Faturamento.Api.Health;
+using Korp.Faturamento.Api.Middlewares;
 
 namespace Korp.Faturamento.Api;
 
