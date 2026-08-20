@@ -25,5 +25,6 @@ public static class DependencyInjection
     private static void ConfigureRepositories(this IServiceCollection services)
     {
         services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<IStockDebitRepository, StockDebitRepository>();
     }
 }
