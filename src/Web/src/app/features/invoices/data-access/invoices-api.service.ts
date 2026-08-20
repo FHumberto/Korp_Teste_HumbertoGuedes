@@ -25,4 +25,8 @@ export class InvoicesApiService {
   close(invoiceId: string): Observable<CloseInvoiceResponse> {
     return this.http.post<CloseInvoiceResponse>(`${this.endpoints.billing}/invoices/${invoiceId}/close`, null);
   }
+
+  getDocument(invoiceId: string): Observable<Blob> {
+    return this.http.get(`${this.endpoints.billing}/invoices/${invoiceId}/document.pdf`, { responseType: 'blob' });
+  }
 }

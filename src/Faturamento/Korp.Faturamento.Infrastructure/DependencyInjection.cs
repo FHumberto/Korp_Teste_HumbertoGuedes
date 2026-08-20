@@ -4,6 +4,8 @@ using Korp.Faturamento.Infrastructure.Persistence;
 using Korp.Faturamento.Infrastructure.Persistence.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Korp.Faturamento.Application.Contracts.Documents;
+using Korp.Faturamento.Infrastructure.Documents;
 
 namespace Korp.Faturamento.Infrastructure;
 
@@ -17,6 +19,9 @@ public static class DependencyInjection
         services.AddDbContext<BillingDbContext>(options => options.UseSqlServer(connectionString));
         services.AddScoped<IInvoiceRepository, InvoiceRepository>();
         services.AddScoped<IInvoiceNumberGenerator, InvoiceNumberGenerator>();
+        services.AddSingleton<IInvoiceDocumentGenerator, InvoicePdfGenerator>();
+
+        QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 
         string baseUrl = configuration["InventoryApi:BaseUrl"]
             ?? throw new InvalidOperationException("A configuração 'InventoryApi:BaseUrl' deve ser informada.");

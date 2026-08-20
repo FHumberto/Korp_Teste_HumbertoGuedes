@@ -20,6 +20,9 @@ public static class InvoiceErrors
     public static Error AlreadyClosed { get; }
         = Error.Conflict("INVOICE_ALREADY_CLOSED", "A nota já está fechada.");
 
+    public static Error NotClosed { get; }
+        = Error.Conflict("INVOICE_NOT_CLOSED", "A nota precisa estar fechada para gerar o documento.");
+
     public static Error WithoutItems { get; }
         = Error.Conflict("INVOICE_WITHOUT_ITEMS", "A nota deve possuir ao menos um item para ser fechada.");
 }

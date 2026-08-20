@@ -30,4 +30,12 @@ describe('InvoicesApiService', () => {
     expect(request.request.body).toEqual(body);
     request.flush({ id: 'invoice-1', number: 1, status: 'open', items: [], createdAt: new Date().toISOString(), closedAt: null });
   });
+
+  it('getDocument should request the invoice PDF as a blob', () => {
+    api.getDocument('invoice-1').subscribe();
+    const request = http.expectOne('http://billing/api/v1/invoices/invoice-1/document.pdf');
+    expect(request.request.method).toBe('GET');
+    expect(request.request.responseType).toBe('blob');
+    request.flush(new Blob(['pdf'], { type: 'application/pdf' }));
+  });
 });

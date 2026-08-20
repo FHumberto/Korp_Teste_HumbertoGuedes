@@ -47,7 +47,7 @@ const itemSchema = schema<InvoiceDraftItem>((item) => {
                         @for (product of products(); track product.id) { <option [value]="product.id" [disabled]="isSelectedByAnotherItem(product.id, itemIndex)">{{ product.code }} — {{ product.description }}</option> }
                       </select>
                       @if (invoiceForm.items[itemIndex].productId().touched() && invoiceForm.items[itemIndex].productId().invalid()) { <p [id]="'product-help-' + itemIndex" class="mt-2 text-sm text-red-700">{{ invoiceForm.items[itemIndex].productId().errors()[0].message }}</p> }
-                      @else if (selectedProduct(item.productId); as product) { <p [id]="'product-help-' + itemIndex" class="mt-2 text-xs text-slate-500">Saldo atual: <strong>{{ product.balance }}</strong>. A validação definitiva ocorrerá no fechamento.</p> }
+                      @else if (selectedProduct(item.productId); as product) { <p [id]="'product-help-' + itemIndex" class="mt-2 text-xs text-slate-500">Saldo atual: <strong>{{ product.balance }}</strong>.</p> }
                       @else { <p [id]="'product-help-' + itemIndex" class="sr-only">Selecione um produto para este item.</p> }
                     </div>
                     <div>

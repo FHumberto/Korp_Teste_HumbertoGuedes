@@ -56,4 +56,29 @@ describe('InvoiceListPage', () => {
     expect(dialog.querySelector('form')).not.toBeNull();
     http.verify();
   });
+
+  it('should open invoice details in a dialog without navigating', async () => {
+    TestBed.configureTestingModule({ imports: [InvoiceListPage], providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([]), { provide: API_ENDPOINTS, useValue: { inventory: '', billing: 'http://billing/api/v1' } }] });
+    const fixture = TestBed.createComponent(InvoiceListPage);
+    const http = TestBed.inject(HttpTestingController);
+    fixture.detectChanges();
+    http.expectOne('http://billing/api/v1/invoices').flush([{ id: 'invoice-1', number: 42, status: 'closed', itemCount: 1, createdAt: '2026-08-20T10:00:00Z', closedAt: '2026-08-20T10:05:00Z' }]);
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const dialog = fixture.nativeElement.querySelectorAll('dialog')[1] as HTMLDialogElement;
+    dialog.showModal = () => dialog.setAttribute('open', '');
+    dialog.close = () => dialog.removeAttribute('open');
+    const detailsButton = Array.from(fixture.nativeElement.querySelectorAll('button')).find((button) => (button as HTMLButtonElement).textContent?.includes('Ver detalhes')) as HTMLButtonElement;
+    detailsButton.click();
+    fixture.detectChanges();
+    http.expectOne('http://billing/api/v1/invoices/invoice-1').flush({ id: 'invoice-1', number: 42, status: 'closed', items: [{ productId: 'product-1', productCode: 'PROD-001', productDescription: 'Produto', quantity: 2 }], createdAt: '2026-08-20T10:00:00Z', closedAt: '2026-08-20T10:05:00Z' });
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(dialog.open).toBe(true);
+    expect(dialog.textContent).toContain('Detalhes da nota fiscal');
+    expect(dialog.textContent).toContain('PROD-001');
+    http.verify();
+  });
 });

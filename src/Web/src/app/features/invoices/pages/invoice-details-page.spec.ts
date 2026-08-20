@@ -28,8 +28,9 @@ describe('InvoiceDetailsPage', () => {
     return { fixture, http };
   }
 
-  it('should close the invoice and print only after backend confirmation', async () => {
-    const print = vi.spyOn(globalThis, 'print').mockImplementation(() => undefined);
+  it('should close the invoice and request the PDF only after backend confirmation', async () => {
+    const createObjectUrl = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:invoice');
+    const click = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => undefined);
     const { fixture, http } = setup();
     http.expectOne('http://billing/api/v1/invoices/invoice-1').flush(openInvoice);
     await fixture.whenStable();
@@ -37,20 +38,23 @@ describe('InvoiceDetailsPage', () => {
 
     const printButton = Array.from(fixture.nativeElement.querySelectorAll('button')).find((button) => (button as HTMLButtonElement).textContent?.includes('Imprimir')) as HTMLButtonElement;
     printButton.click();
-    expect(print).not.toHaveBeenCalled();
     http.expectOne('http://billing/api/v1/invoices/invoice-1/close').flush({ id: 'invoice-1', number: 10, status: 'closed', closedAt: '2026-08-20T10:05:00Z' });
-    await new Promise((resolve) => globalThis.setTimeout(resolve, 0));
+    const documentRequest = http.expectOne('http://billing/api/v1/invoices/invoice-1/document.pdf');
+    expect(documentRequest.request.responseType).toBe('blob');
+    documentRequest.flush(new Blob(['pdf'], { type: 'application/pdf' }));
+    await fixture.whenStable();
     fixture.detectChanges();
 
-    expect(print).toHaveBeenCalledOnce();
+    expect(createObjectUrl).toHaveBeenCalledOnce();
+    expect(click).toHaveBeenCalledOnce();
     expect(fixture.nativeElement.textContent).toContain('Nota fechada com sucesso.');
     expect(fixture.nativeElement.textContent).not.toContain('Processando fechamento...');
     http.verify();
-    print.mockRestore();
+    createObjectUrl.mockRestore();
+    click.mockRestore();
   });
 
   it('should keep the invoice open and allow retry when inventory is unavailable', async () => {
-    const print = vi.spyOn(globalThis, 'print').mockImplementation(() => undefined);
     const { fixture, http } = setup();
     http.expectOne('http://billing/api/v1/invoices/invoice-1').flush(openInvoice);
     await fixture.whenStable();
@@ -62,20 +66,18 @@ describe('InvoiceDetailsPage', () => {
     await fixture.whenStable();
     fixture.detectChanges();
 
-    expect(print).not.toHaveBeenCalled();
     expect(fixture.nativeElement.textContent).toContain('O fechamento não foi concluído.');
     expect(fixture.nativeElement.textContent).toContain('Imprimir');
     http.verify();
-    print.mockRestore();
   });
 
-  it('should not show the print action for a closed invoice', async () => {
+  it('should allow a closed invoice PDF to be opened again', async () => {
     const { fixture, http } = setup();
     http.expectOne('http://billing/api/v1/invoices/invoice-1').flush({ ...openInvoice, status: 'closed', closedAt: '2026-08-20T10:05:00Z' });
     await fixture.whenStable();
     fixture.detectChanges();
     const buttons = Array.from(fixture.nativeElement.querySelectorAll('button')).map((button) => (button as HTMLButtonElement).textContent);
-    expect(buttons.some((text) => text?.includes('Imprimir'))).toBe(false);
+    expect(buttons.some((text) => text?.includes('Visualizar PDF'))).toBe(true);
     http.verify();
   });
 });
