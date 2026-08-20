@@ -1,5 +1,4 @@
 ﻿using Korp.Faturamento.Api.Extensions;
-using Korp.Faturamento.Api.Health;
 using Korp.Faturamento.Api.Middlewares;
 
 namespace Korp.Faturamento.Api;
@@ -14,8 +13,6 @@ public static class DependencyInjection
         services.AddRateLimiterPolicies(configuration);
         services.AddScalarDocumentation();
         services.AddControllers();
-        services.AddHealthChecks()
-            .AddCheck<BillingDatabaseHealthCheck>("billing-database", tags: ["ready"]);
 
         return services;
     }

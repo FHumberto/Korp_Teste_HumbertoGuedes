@@ -3,7 +3,6 @@ using Korp.Faturamento.Application.Abstractions.Wrappers;
 using Korp.Faturamento.Application.Contracts.UseCases;
 using Korp.Faturamento.Application.Features.Invoice.CreateInvoice;
 using Korp.Faturamento.Application.Features.Invoice.CloseInvoice;
-using Korp.Faturamento.Application.Features.Invoice.CreateInvoice;
 using Korp.Faturamento.Application.Features.Invoice.GetInvoice;
 using Korp.Faturamento.Application.Features.Invoice.ListInvoices;
 using Microsoft.AspNetCore.Mvc;

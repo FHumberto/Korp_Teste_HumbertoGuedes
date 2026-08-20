@@ -2,7 +2,7 @@ using Korp.Faturamento.Api;
 using Korp.Faturamento.Api.Extensions;
 using Korp.Faturamento.Application;
 using Korp.Faturamento.Infrastructure;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Korp.Faturamento.Infrastructure.Persistence;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +15,9 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 WebApplication app = builder.Build();
 
+if (app.Configuration.GetValue<bool>("Database:ApplyMigrationsOnStartup"))
+    await app.Services.ApplyBillingMigrationsAsync();
+
 app.UseExceptionHandler();
 app.UseHttpsRedirection();
 app.UseCorsPolicies();
@@ -23,7 +26,5 @@ app.UseAuthorization();
 app.UseScalarDocumentation();
 
 app.MapControllers();
-app.MapHealthChecks("/health/live", new HealthCheckOptions { Predicate = _ => false });
-app.MapHealthChecks("/health/ready", new HealthCheckOptions { Predicate = check => check.Tags.Contains("ready") });
 
 await app.RunAsync();
