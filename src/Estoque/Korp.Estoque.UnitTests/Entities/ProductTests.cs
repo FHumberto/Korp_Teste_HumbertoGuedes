@@ -1,6 +1,6 @@
-﻿using Korp.Estoque.Domain.Abstractions.Exceptions;
-using Korp.Estoque.Domain.Abstractions.Types;
+﻿using Korp.Estoque.Domain.Abstractions.Types;
 using Korp.Estoque.Domain.Entities.Errors;
+using Korp.Estoque.Domain.Exceptions;
 
 namespace Korp.Estoque.UnitTests.Entities;
 
