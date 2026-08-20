@@ -46,5 +46,8 @@ public sealed class Error
     public static Error Conflict(string code, string description)
         => new(code, description, ErrorType.Conflict);
 
+    public static Error ServiceUnavailable(string code, string description)
+        => new(code, description, ErrorType.ServiceUnavailable);
+
     #endregion
 }

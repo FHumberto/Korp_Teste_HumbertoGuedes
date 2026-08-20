@@ -8,6 +8,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Korp.Faturamento.Application\Korp.Faturamento.Application.csproj" />
+    <ProjectReference Include="..\Korp.Faturamento.Domain\Korp.Faturamento.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.11" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.11" />
   </ItemGroup>
 
 </Project>

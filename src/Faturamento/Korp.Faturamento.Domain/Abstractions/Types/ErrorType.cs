@@ -7,5 +7,6 @@ public enum ErrorType
     AccessUnauthorized = 401,
     AccessForbidden = 403,
     NotFound = 404,
-    Conflict = 409
+    Conflict = 409,
+    ServiceUnavailable = 503
 }
