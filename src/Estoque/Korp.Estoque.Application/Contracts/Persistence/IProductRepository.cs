@@ -10,5 +10,7 @@ public interface IProductRepository
 
     Task<Paged<Product>> ListAsync(int pageNumber, int pageSize, CancellationToken cancellationToken);
 
+    Task<IReadOnlyList<Product>> ListAvailableAsync(CancellationToken cancellationToken);
+
     Task<bool> TryAddAsync(Product product, CancellationToken cancellationToken);
 }

@@ -27,15 +27,32 @@ describe('ProductListPage', () => {
     http.expectOne((request) => request.url === 'http://inventory/api/v1/products').flush({ items: [], totalRecords: 0, pageNumber: 1, pageSize: 20, totalPages: 0 });
     fixture.detectChanges();
 
+    const createButton = fixture.nativeElement.querySelector('button') as HTMLButtonElement;
+    expect(createButton.textContent).toContain('Novo produto');
+    expect(createButton.querySelector('svg')?.getAttribute('aria-hidden')).toBe('true');
     const dialog = fixture.nativeElement.querySelector('dialog') as HTMLDialogElement;
     dialog.showModal = () => dialog.setAttribute('open', '');
     dialog.close = () => dialog.removeAttribute('open');
-    fixture.nativeElement.querySelector('button').click();
+    createButton.click();
     fixture.detectChanges();
 
     expect(dialog.open).toBe(true);
     expect(dialog.textContent).toContain('Novo produto');
     expect(dialog.querySelector('form')).not.toBeNull();
+    http.verify();
+  });
+
+  it('should highlight products without stock', async () => {
+    TestBed.configureTestingModule({ imports: [ProductListPage], providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([]), { provide: API_ENDPOINTS, useValue: { inventory: 'http://inventory/api/v1', billing: '' } }] });
+    const fixture = TestBed.createComponent(ProductListPage);
+    const http = TestBed.inject(HttpTestingController);
+    fixture.detectChanges();
+    http.expectOne((request) => request.url === 'http://inventory/api/v1/products').flush({ items: [{ id: 'product-empty', code: 'PROD-000', description: 'Produto zerado', balance: 0 }], totalRecords: 1, pageNumber: 1, pageSize: 20, totalPages: 1 });
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const badge = fixture.nativeElement.querySelector('[aria-label="Saldo zero, sem estoque"]') as HTMLElement;
+    expect(badge.textContent).toContain('Sem estoque');
     http.verify();
   });
 });

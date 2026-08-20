@@ -40,4 +40,11 @@ describe('ProductsApiService', () => {
     http.expectOne((request) => request.params.get('pageNumber') === '2' && request.params.get('pageSize') === '100').flush({ items: [{ id: '2', code: 'B', description: 'B', balance: 2 }], totalRecords: 101, pageNumber: 2, pageSize: 100, totalPages: 2 });
     expect(result).toHaveLength(2);
   });
+
+  it('listAvailable should request the dedicated available-products route', () => {
+    api.listAvailable().subscribe();
+    const request = http.expectOne('http://inventory/api/v1/products/available');
+    expect(request.request.method).toBe('GET');
+    request.flush([]);
+  });
 });

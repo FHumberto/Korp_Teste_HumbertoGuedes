@@ -15,17 +15,20 @@ import { ProductCreateForm } from '../components/product-create-form';
   imports: [EmptyState, FeedbackMessage, LoadingIndicator, ProductCreateForm],
   template: `
     <section>
-      <div class="flex flex-wrap items-start justify-between gap-4">
+      <div class="flex flex-wrap items-start justify-between gap-x-6 gap-y-4">
         <div><p class="text-sm font-semibold text-blue-700">Estoque</p><h1 class="mt-1 text-3xl font-bold tracking-tight">Produtos</h1><p class="mt-2 text-slate-600">Consulte os produtos cadastrados e seus saldos atuais.</p></div>
-        <button type="button" (click)="openCreateDialog()" class="rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700">Novo produto</button>
+        <button type="button" (click)="openCreateDialog()" class="inline-flex items-center gap-2 self-start rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 sm:mt-6">
+          <svg aria-hidden="true" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" class="size-4"><path d="M10 4v12M4 10h12" stroke-linecap="round" /></svg>
+          Novo produto
+        </button>
       </div>
 
-      <div class="mt-6 space-y-4">
+      <div class="mt-4 space-y-4">
         @if (created()) { <app-feedback-message kind="success" title="Produto cadastrado com sucesso." /> }
         @if (error(); as apiError) { <app-feedback-message kind="error" title="Não foi possível carregar os produtos." [message]="apiError.message" [traceId]="apiError.traceId" /> }
         @if (loading()) { <div class="rounded-xl border border-slate-200 bg-white p-6"><app-loading-indicator label="Carregando produtos..." /></div> }
         @else if (page(); as currentPage) {
-          @if (currentPage.items.length === 0) { <app-empty-state title="Nenhum produto cadastrado" description="Cadastre o primeiro produto para utilizá-lo em uma nota fiscal." /> }
+          @if (currentPage.items.length === 0) { <app-empty-state title="Nenhum produto cadastrado" description="Cadastre o primeiro produto para utilizá-lo em uma nota fiscal." actionLabel="Cadastrar produto" (action)="openCreateDialog()" /> }
           @else {
             <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
               <div class="overflow-x-auto">
@@ -33,7 +36,7 @@ import { ProductCreateForm } from '../components/product-create-form';
                   <caption class="sr-only">Produtos cadastrados e saldos disponíveis</caption>
                   <thead class="bg-slate-100 text-slate-700"><tr><th scope="col" class="px-4 py-3 font-semibold">Código</th><th scope="col" class="px-4 py-3 font-semibold">Descrição</th><th scope="col" class="px-4 py-3 text-right font-semibold">Saldo</th></tr></thead>
                   <tbody class="divide-y divide-slate-200">
-                    @for (product of currentPage.items; track product.id) { <tr><td class="whitespace-nowrap px-4 py-3 font-medium text-slate-900">{{ product.code }}</td><td class="px-4 py-3 text-slate-700">{{ product.description }}</td><td class="px-4 py-3 text-right font-semibold tabular-nums">{{ product.balance }}</td></tr> }
+                    @for (product of currentPage.items; track product.id) { <tr><td class="whitespace-nowrap px-4 py-3 font-medium text-slate-900">{{ product.code }}</td><td class="px-4 py-3 text-slate-700">{{ product.description }}</td><td class="px-4 py-3 text-right font-semibold tabular-nums">@if (product.balance === 0) { <span class="inline-flex rounded-full bg-red-100 px-2.5 py-1 text-xs font-semibold text-red-800" aria-label="Saldo zero, sem estoque">Sem estoque</span> } @else { {{ product.balance }} }</td></tr> }
                   </tbody>
                 </table>
               </div>
@@ -70,6 +73,7 @@ export class ProductListPage {
   private readonly route = inject(ActivatedRoute);
   private readonly pageSize = 20;
   private readonly createDialog = viewChild.required<ElementRef<HTMLDialogElement>>('createDialog');
+  private createDialogOpener: HTMLElement | null = null;
 
   protected readonly page = signal<Paged<ProductSummary> | null>(null);
   protected readonly loading = signal(true);
@@ -88,8 +92,8 @@ export class ProductListPage {
 
   protected previousPage(): void { const current = this.page(); if (current && current.pageNumber > 1) this.loadPage(current.pageNumber - 1); }
   protected nextPage(): void { const current = this.page(); if (current && current.pageNumber < current.totalPages) this.loadPage(current.pageNumber + 1); }
-  protected openCreateDialog(): void { this.created.set(false); this.createDialogOpen.set(true); this.createDialog().nativeElement.showModal(); }
-  protected closeCreateDialog(event?: Event): void { event?.preventDefault(); this.createDialog().nativeElement.close(); this.createDialogOpen.set(false); }
+  protected openCreateDialog(): void { this.createDialogOpener = document.activeElement as HTMLElement | null; this.created.set(false); this.createDialogOpen.set(true); const dialog = this.createDialog().nativeElement; dialog.showModal(); queueMicrotask(() => dialog.querySelector<HTMLElement>('input')?.focus()); }
+  protected closeCreateDialog(event?: Event): void { event?.preventDefault(); this.createDialog().nativeElement.close(); this.createDialogOpen.set(false); this.createDialogOpener?.focus(); this.createDialogOpener = null; }
   protected onProductCreated(): void { this.closeCreateDialog(); this.created.set(true); this.loadPage(1); }
 
   private loadPage(pageNumber: number): void {

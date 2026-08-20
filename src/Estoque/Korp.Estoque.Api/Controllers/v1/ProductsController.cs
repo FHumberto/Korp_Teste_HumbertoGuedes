@@ -4,6 +4,7 @@ using Korp.Estoque.Application.Features.Product.CreateProduct;
 using Korp.Estoque.Application.Features.Product.GetProduct;
 using Korp.Estoque.Application.Features.Product.GetProductsByIds;
 using Korp.Estoque.Application.Features.Product.ListProducts;
+using Korp.Estoque.Application.Features.Product.ListAvailableProducts;
 using Korp.Estoque.Domain.Abstractions.Types;
 
 namespace Korp.Estoque.Api.Controllers.v1;
@@ -20,6 +21,13 @@ public sealed class ProductsController : BaseController
     public async Task<IActionResult> ListProductsAsync([FromServices] IListProductsUseCase useCase, [FromQuery] ListProductsRequest request, CancellationToken ct)
     {
         return (await useCase.ExecuteAsync(request, ct)).Match(onSuccess: Ok, onFailure: Problem);
+    }
+
+    [HttpGet("available")]
+    [ProducesResponseType<IReadOnlyCollection<ListAvailableProductsResponse>>(StatusCodes.Status200OK)]
+    public async Task<IActionResult> ListAvailableProductsAsync([FromServices] IListAvailableProductsUseCase useCase, CancellationToken ct)
+    {
+        return Ok(await useCase.ExecuteAsync(ct));
     }
 
     [HttpGet("{id:guid}")]

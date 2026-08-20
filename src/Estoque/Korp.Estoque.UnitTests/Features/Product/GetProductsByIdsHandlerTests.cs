@@ -68,6 +68,7 @@ public sealed class GetProductsByIdsHandlerTests
 
     private sealed class ProductRepositoryStub(IReadOnlyList<ProductEntity> products) : IProductRepository
     {
+        public Task<IReadOnlyList<ProductEntity>> ListAvailableAsync(CancellationToken cancellationToken) => Task.FromResult<IReadOnlyList<ProductEntity>>([]);
         public bool QueryWasExecuted { get; private set; }
         public IReadOnlyCollection<Guid>? ReceivedIds { get; private set; }
 

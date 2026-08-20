@@ -25,6 +25,10 @@ export class ProductsApiService {
     );
   }
 
+  listAvailable(): Observable<readonly ProductSummary[]> {
+    return this.http.get<readonly ProductSummary[]>(`${this.endpoints.inventory}/products/available`);
+  }
+
   getById(productId: string): Observable<Product> {
     return this.http.get<Product>(`${this.endpoints.inventory}/products/${productId}`);
   }

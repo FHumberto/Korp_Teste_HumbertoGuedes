@@ -6,12 +6,26 @@ import { API_ENDPOINTS } from '../../../core/config/api-endpoints';
 import { InvoiceCreatePage } from './invoice-create-page';
 
 describe('InvoiceCreatePage', () => {
+  it('should load products from the dedicated available-products route', async () => {
+    TestBed.configureTestingModule({ imports: [InvoiceCreatePage], providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([]), { provide: API_ENDPOINTS, useValue: { inventory: 'http://inventory/api/v1', billing: 'http://billing/api/v1' } }] });
+    const fixture = TestBed.createComponent(InvoiceCreatePage);
+    const http = TestBed.inject(HttpTestingController);
+    fixture.detectChanges();
+    http.expectOne('http://inventory/api/v1/products/available').flush([{ id: 'product-available', code: 'COM-SALDO', description: 'Com saldo', balance: 3 }]);
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const options = Array.from((fixture.nativeElement.querySelector('#product-0') as HTMLSelectElement).options);
+    expect(options.some((option) => option.value === 'product-available')).toBe(true);
+    http.verify();
+  });
+
   it('should add another item and prevent selecting an already used product', async () => {
     TestBed.configureTestingModule({ imports: [InvoiceCreatePage], providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([]), { provide: API_ENDPOINTS, useValue: { inventory: 'http://inventory/api/v1', billing: 'http://billing/api/v1' } }] });
     const fixture = TestBed.createComponent(InvoiceCreatePage);
     const http = TestBed.inject(HttpTestingController);
     fixture.detectChanges();
-    http.expectOne((request) => request.url === 'http://inventory/api/v1/products').flush({ items: [{ id: 'product-1', code: 'PROD-001', description: 'Produto', balance: 10 }, { id: 'product-2', code: 'PROD-002', description: 'Outro', balance: 5 }], totalRecords: 2, pageNumber: 1, pageSize: 100, totalPages: 1 });
+    http.expectOne('http://inventory/api/v1/products/available').flush([{ id: 'product-1', code: 'PROD-001', description: 'Produto', balance: 10 }, { id: 'product-2', code: 'PROD-002', description: 'Outro', balance: 5 }]);
     await fixture.whenStable();
     fixture.detectChanges();
 

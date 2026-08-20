@@ -28,8 +28,8 @@ const itemSchema = schema<InvoiceDraftItem>((item) => {
   imports: [EmptyState, FeedbackMessage, FormField, LoadingIndicator, ProcessingButton, RouterLink],
   template: `
         @if (productsLoading()) { <div class="rounded-xl border border-slate-200 bg-white p-6"><app-loading-indicator label="Carregando produtos..." /></div> }
-        @else if (productsError(); as apiError) { <div class="space-y-3"><app-feedback-message kind="error" title="Não foi possível carregar os produtos." [message]="apiError.message" [traceId]="apiError.traceId" /><button type="button" (click)="loadProducts()" class="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold hover:bg-slate-50">Tentar novamente</button></div> }
-        @else if (products().length === 0) { <div class="space-y-4"><app-empty-state title="Nenhum produto disponível" description="Cadastre ao menos um produto antes de criar a nota." /><a routerLink="/products/new" class="inline-flex rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800">Cadastrar produto</a></div> }
+        @else if (productsError(); as apiError) { <div class="space-y-3"><app-feedback-message kind="error" title="Não foi possível carregar os produtos." [message]="apiError.message" [traceId]="apiError.traceId" /><button type="button" (click)="loadProducts()" class="inline-flex min-h-10 items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold hover:bg-slate-50 active:bg-slate-100"><span aria-hidden="true">↻</span>Tentar novamente</button></div> }
+        @else if (products().length === 0) { <div class="space-y-4"><app-empty-state title="Nenhum produto com saldo disponível" description="Cadastre um produto com saldo inicial positivo para criar a nota." /><a routerLink="/products/new" class="inline-flex rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800">Cadastrar produto</a></div> }
         @else {
           <form (submit)="onSubmit($event)" class="space-y-6" novalidate>
             @if (submitError(); as apiError) { <app-feedback-message kind="error" title="Não foi possível criar a nota." [message]="apiError.message" [traceId]="apiError.traceId" /> }
@@ -95,7 +95,7 @@ export class InvoiceCreateForm {
   protected loadProducts(): void {
     this.productsLoading.set(true);
     this.productsError.set(null);
-    this.productsApi.listAll().pipe(finalize(() => this.productsLoading.set(false)), takeUntilDestroyed(this.destroyRef)).subscribe({
+    this.productsApi.listAvailable().pipe(finalize(() => this.productsLoading.set(false)), takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (products) => this.products.set(products),
       error: (error: unknown) => this.productsError.set(mapApiError(error)),
     });

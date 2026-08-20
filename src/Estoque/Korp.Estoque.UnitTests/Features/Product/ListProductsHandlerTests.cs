@@ -65,6 +65,8 @@ public sealed class ListProductsHandlerTests
             return Task.FromResult(page);
         }
 
+        public Task<IReadOnlyList<ProductEntity>> ListAvailableAsync(CancellationToken cancellationToken) => Task.FromResult<IReadOnlyList<ProductEntity>>([]);
+
         public Task<bool> TryAddAsync(ProductEntity product, CancellationToken cancellationToken)
             => Task.FromResult(false);
 

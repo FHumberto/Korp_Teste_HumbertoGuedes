@@ -3,6 +3,7 @@ using Korp.Estoque.Application.Features.Product.CreateProduct;
 using Korp.Estoque.Application.Features.Product.GetProduct;
 using Korp.Estoque.Application.Features.Product.GetProductsByIds;
 using Korp.Estoque.Application.Features.Product.ListProducts;
+using Korp.Estoque.Application.Features.Product.ListAvailableProducts;
 using Korp.Estoque.Application.Features.Stock.DebitStock;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -25,6 +26,7 @@ public static class DependencyInjection
         services.AddScoped<IGetProductUseCase, GetProductHandler>();
         services.AddScoped<IGetProductsByIdsUseCase, GetProductsByIdsHandler>();
         services.AddScoped<IListProductsUseCase, ListProductsHandler>();
+        services.AddScoped<IListAvailableProductsUseCase, ListAvailableProductsHandler>();
         services.AddScoped<IDebitStockUseCase, DebitStockHandler>();
     }
 }

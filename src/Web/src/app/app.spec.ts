@@ -21,6 +21,8 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.textContent).toContain('Korp');
+    expect(compiled.textContent).toContain('Sistema de emissão de Notas Fiscais');
     expect(compiled.querySelector('nav')?.textContent).toContain('Produtos');
     expect(compiled.querySelector('nav')?.textContent).toContain('Notas fiscais');
   });

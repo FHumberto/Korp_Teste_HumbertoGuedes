@@ -23,7 +23,7 @@ public sealed class InvoicePdfGenerator : IInvoiceDocumentGenerator
             {
                 row.RelativeItem().Column(column =>
                 {
-                    column.Item().Text("Korp - Sistema de Emissão de Notas").Bold().FontSize(16).FontColor(Colors.Blue.Darken3);
+                    column.Item().Text("Korp - Sistema de emissão de Notas Fiscais").Bold().FontSize(16).FontColor(Colors.Blue.Darken3);
                     column.Item().PaddingTop(4).Text("Documento simplificado de saída").FontSize(9).FontColor(Colors.Grey.Darken1);
                 });
                 row.ConstantItem(190).Column(column =>
@@ -74,7 +74,7 @@ public sealed class InvoicePdfGenerator : IInvoiceDocumentGenerator
             });
         })).WithMetadata(new DocumentMetadata
         {
-            Title = $"Nota {invoice.Number:D6}", Author = "Korp - Sistema de Emissão de Notas",
+            Title = $"Nota {invoice.Number:D6}", Author = "Korp - Sistema de emissão de Notas Fiscais",
             Subject = "Documento simplificado de saída", Creator = "Korp.Faturamento"
         }).GeneratePdf();
     }

@@ -51,6 +51,15 @@ public sealed class ProductRepository(InventoryDbContext dbContext) : IProductRe
         return new Paged<Product>(items, totalRecords, pageNumber, pageSize);
     }
 
+    public async Task<IReadOnlyList<Product>> ListAvailableAsync(CancellationToken cancellationToken)
+    {
+        return await dbContext.Products.AsNoTracking()
+            .Where(product => product.Balance > 0)
+            .OrderBy(product => product.Code)
+            .ThenBy(product => product.Id)
+            .ToListAsync(cancellationToken);
+    }
+
     #endregion
 
     #region [ ESCRITA ]

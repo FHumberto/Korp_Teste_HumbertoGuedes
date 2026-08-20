@@ -12,6 +12,20 @@ public sealed class InventoryPersistenceTests(EstoqueDatabaseFixture fixture) : 
 
     public Task DisposeAsync() => Task.CompletedTask;
 
+    [Fact]
+    public async Task ListAvailable_WhenProductsHaveDifferentBalances_ShouldReturnOnlyPositiveBalances()
+    {
+        Product availableProduct = CreateProduct("PROD-001", 5);
+        Product unavailableProduct = CreateProduct("PROD-002", 0);
+        await SeedProductsAsync(availableProduct, unavailableProduct);
+        await using InventoryDbContext dbContext = fixture.CreateDbContext();
+        var repository = new ProductRepository(dbContext);
+
+        IReadOnlyList<Product> products = await repository.ListAvailableAsync(CancellationToken.None);
+
+        products.ShouldHaveSingleItem().Id.ShouldBe(availableProduct.Id);
+    }
+
     // Atende à unicidade do código do produto exigida pelo desafio e garantida pelo índice do SQL Server.
     [Fact]
     public async Task Add_WhenProductCodeAlreadyExists_ShouldRejectDuplicate()

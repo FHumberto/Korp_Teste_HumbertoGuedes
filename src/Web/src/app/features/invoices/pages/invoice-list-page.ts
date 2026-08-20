@@ -19,22 +19,25 @@ type StatusFilter = InvoiceStatus | 'all';
   imports: [DatePipe, EmptyState, FeedbackMessage, InvoiceCreateForm, InvoiceDetails, InvoiceNumberPipe, LoadingIndicator],
   template: `
     <section>
-      <div class="flex flex-wrap items-start justify-between gap-4">
+      <div class="flex flex-wrap items-start justify-between gap-x-6 gap-y-4">
         <div><p class="text-sm font-semibold text-blue-700">Faturamento</p><h1 class="mt-1 text-3xl font-bold tracking-tight">Notas fiscais</h1><p class="mt-2 text-slate-600">Consulte notas abertas e fechadas.</p></div>
-        <button type="button" (click)="openCreateDialog()" class="rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700">Nova nota</button>
+        <button type="button" (click)="openCreateDialog()" class="inline-flex items-center gap-2 self-start rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 sm:mt-6">
+          <svg aria-hidden="true" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" class="size-4"><path d="M10 4v12M4 10h12" stroke-linecap="round" /></svg>
+          Nova nota fiscal
+        </button>
       </div>
 
-      <div class="mt-6 flex items-end gap-3">
+      <div class="mt-4 flex items-end gap-3">
         <div><label for="status-filter" class="block text-sm font-semibold text-slate-800">Status</label><select id="status-filter" [value]="filter()" (change)="changeFilter($event)" class="mt-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-200"><option value="all">Todas</option><option value="open">Abertas</option><option value="closed">Fechadas</option></select></div>
       </div>
 
-      <div class="mt-6 space-y-4">
+      <div class="mt-4 space-y-4">
         @if (error(); as apiError) { <app-feedback-message kind="error" title="Não foi possível carregar as notas." [message]="apiError.message" [traceId]="apiError.traceId" /> }
         @if (loading()) { <div class="rounded-xl border border-slate-200 bg-white p-6"><app-loading-indicator label="Carregando notas fiscais..." /></div> }
-        @else if (invoices().length === 0) { <app-empty-state title="Nenhuma nota encontrada" description="Crie uma nota ou altere o filtro selecionado." /> }
+        @else if (invoices().length === 0) { @if (filter() === 'all') { <app-empty-state title="Nenhuma nota encontrada" description="Crie a primeira nota fiscal para iniciar o faturamento." actionLabel="Criar nota fiscal" (action)="openCreateDialog()" /> } @else { <app-empty-state title="Nenhuma nota encontrada" description="Não existem notas com o status selecionado." actionLabel="Limpar filtro" (action)="clearFilter()" /> } }
         @else {
           <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm"><div class="overflow-x-auto"><table class="w-full border-collapse text-left text-sm"><caption class="sr-only">Notas fiscais cadastradas</caption><thead class="bg-slate-100 text-slate-700"><tr><th scope="col" class="px-4 py-3 font-semibold">Número</th><th scope="col" class="px-4 py-3 font-semibold">Status</th><th scope="col" class="px-4 py-3 text-right font-semibold">Itens</th><th scope="col" class="px-4 py-3 font-semibold">Criação</th><th scope="col" class="px-4 py-3"><span class="sr-only">Ações</span></th></tr></thead><tbody class="divide-y divide-slate-200">
-            @for (invoice of invoices(); track invoice.id) { <tr><td class="px-4 py-3 font-semibold tabular-nums">{{ invoice.number | invoiceNumber }}</td><td class="px-4 py-3"><span class="inline-flex rounded-full px-2.5 py-1 text-xs font-semibold" [class]="invoice.status === 'open' ? 'bg-amber-100 text-amber-900' : 'bg-emerald-100 text-emerald-900'">{{ invoice.status === 'open' ? 'Aberta' : 'Fechada' }}</span></td><td class="px-4 py-3 text-right tabular-nums">{{ invoice.itemCount }}</td><td class="whitespace-nowrap px-4 py-3 text-slate-700">{{ invoice.createdAt | date:'dd/MM/yyyy HH:mm' }}</td><td class="px-4 py-3 text-right"><button type="button" (click)="openDetailsDialog(invoice.id)" class="font-semibold text-blue-700 hover:text-blue-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700">Ver detalhes</button></td></tr> }
+            @for (invoice of invoices(); track invoice.id) { <tr tabindex="0" (click)="openDetailsDialog(invoice.id)" (keydown)="openDetailsFromKeyboard($event, invoice.id)" [attr.aria-label]="'Ver detalhes da nota ' + (invoice.number | invoiceNumber)" class="cursor-pointer transition-colors hover:bg-blue-50 focus-visible:bg-blue-50 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-700"><td class="px-4 py-3 font-semibold tabular-nums">{{ invoice.number | invoiceNumber }}</td><td class="px-4 py-3"><span class="inline-flex rounded-full px-2.5 py-1 text-xs font-semibold" [class]="invoice.status === 'open' ? 'bg-amber-100 text-amber-900' : 'bg-emerald-100 text-emerald-900'">{{ invoice.status === 'open' ? 'Aberta' : 'Fechada' }}</span></td><td class="px-4 py-3 text-right tabular-nums">{{ invoice.itemCount }}</td><td class="whitespace-nowrap px-4 py-3 text-slate-700">{{ invoice.createdAt | date:'dd/MM/yyyy HH:mm' }}</td><td class="px-4 py-3 text-right"><button type="button" (click)="$event.stopPropagation(); openDetailsDialog(invoice.id)" class="inline-flex min-h-10 items-center gap-2 whitespace-nowrap font-semibold text-blue-700 hover:text-blue-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"><svg aria-hidden="true" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" class="size-4"><path d="M2.5 10s2.7-5 7.5-5 7.5 5 7.5 5-2.7 5-7.5 5-7.5-5-7.5-5Z"/><circle cx="10" cy="10" r="2"/></svg>Ver detalhes</button></td></tr> }
           </tbody></table></div></div>
         }
       </div>
@@ -70,6 +73,8 @@ export class InvoiceListPage {
   private readonly destroyRef = inject(DestroyRef);
   private readonly createDialog = viewChild.required<ElementRef<HTMLDialogElement>>('createDialog');
   private readonly detailsDialog = viewChild.required<ElementRef<HTMLDialogElement>>('detailsDialog');
+  private createDialogOpener: HTMLElement | null = null;
+  private detailsDialogOpener: HTMLElement | null = null;
   protected readonly invoices = signal<readonly InvoiceSummary[]>([]);
   protected readonly filter = signal<StatusFilter>('all');
   protected readonly loading = signal(true);
@@ -84,11 +89,18 @@ export class InvoiceListPage {
     this.load();
   }
 
-  protected openCreateDialog(): void { this.createDialogOpen.set(true); this.createDialog().nativeElement.showModal(); }
-  protected closeCreateDialog(event?: Event): void { event?.preventDefault(); this.createDialog().nativeElement.close(); this.createDialogOpen.set(false); }
+  protected clearFilter(): void { this.filter.set('all'); this.load(); }
+
+  protected openCreateDialog(): void { this.createDialogOpener = document.activeElement as HTMLElement | null; this.createDialogOpen.set(true); const dialog = this.createDialog().nativeElement; dialog.showModal(); queueMicrotask(() => dialog.querySelector<HTMLElement>('select, input, button')?.focus()); }
+  protected closeCreateDialog(event?: Event): void { event?.preventDefault(); this.createDialog().nativeElement.close(); this.createDialogOpen.set(false); this.createDialogOpener?.focus(); this.createDialogOpener = null; }
   protected onInvoiceCreated(): void { this.closeCreateDialog(); this.load(); }
-  protected openDetailsDialog(invoiceId: string): void { this.selectedInvoiceId.set(invoiceId); this.detailsDialog().nativeElement.showModal(); }
-  protected closeDetailsDialog(event?: Event): void { event?.preventDefault(); this.detailsDialog().nativeElement.close(); this.selectedInvoiceId.set(null); }
+  protected openDetailsDialog(invoiceId: string): void { this.detailsDialogOpener = document.activeElement as HTMLElement | null; this.selectedInvoiceId.set(invoiceId); const dialog = this.detailsDialog().nativeElement; dialog.showModal(); queueMicrotask(() => dialog.querySelector<HTMLElement>('button')?.focus()); }
+  protected openDetailsFromKeyboard(event: KeyboardEvent, invoiceId: string): void {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    event.preventDefault();
+    this.openDetailsDialog(invoiceId);
+  }
+  protected closeDetailsDialog(event?: Event): void { event?.preventDefault(); this.detailsDialog().nativeElement.close(); this.selectedInvoiceId.set(null); this.detailsDialogOpener?.focus(); this.detailsDialogOpener = null; }
   protected closeDetailsOnBackdrop(event: MouseEvent): void { if (event.target === this.detailsDialog().nativeElement) this.closeDetailsDialog(); }
   protected onInvoiceClosed(invoice: Invoice): void {
     this.invoices.update((invoices) => invoices.map((summary) => summary.id === invoice.id ? { ...summary, status: invoice.status, closedAt: invoice.closedAt } : summary));

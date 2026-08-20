@@ -36,7 +36,7 @@ describe('InvoiceDetailsPage', () => {
     await fixture.whenStable();
     fixture.detectChanges();
 
-    const printButton = Array.from(fixture.nativeElement.querySelectorAll('button')).find((button) => (button as HTMLButtonElement).textContent?.includes('Imprimir')) as HTMLButtonElement;
+    const printButton = Array.from(fixture.nativeElement.querySelectorAll('button')).find((button) => (button as HTMLButtonElement).textContent?.includes('Emitir e imprimir')) as HTMLButtonElement;
     printButton.click();
     http.expectOne('http://billing/api/v1/invoices/invoice-1/close').flush({ id: 'invoice-1', number: 10, status: 'closed', closedAt: '2026-08-20T10:05:00Z' });
     const documentRequest = http.expectOne('http://billing/api/v1/invoices/invoice-1/document.pdf');
@@ -60,14 +60,14 @@ describe('InvoiceDetailsPage', () => {
     await fixture.whenStable();
     fixture.detectChanges();
 
-    const printButton = Array.from(fixture.nativeElement.querySelectorAll('button')).find((button) => (button as HTMLButtonElement).textContent?.includes('Imprimir')) as HTMLButtonElement;
+    const printButton = Array.from(fixture.nativeElement.querySelectorAll('button')).find((button) => (button as HTMLButtonElement).textContent?.includes('Emitir e imprimir')) as HTMLButtonElement;
     printButton.click();
     http.expectOne('http://billing/api/v1/invoices/invoice-1/close').flush({ title: 'O serviço de Estoque está indisponível.', status: 503, detail: 'O serviço de Estoque está indisponível.', code: 'INVENTORY_UNAVAILABLE' }, { status: 503, statusText: 'Unavailable' });
     await fixture.whenStable();
     fixture.detectChanges();
 
     expect(fixture.nativeElement.textContent).toContain('O fechamento não foi concluído.');
-    expect(fixture.nativeElement.textContent).toContain('Imprimir');
+    expect(fixture.nativeElement.textContent).toContain('Emitir e imprimir');
     http.verify();
   });
 
@@ -77,7 +77,7 @@ describe('InvoiceDetailsPage', () => {
     await fixture.whenStable();
     fixture.detectChanges();
     const buttons = Array.from(fixture.nativeElement.querySelectorAll('button')).map((button) => (button as HTMLButtonElement).textContent);
-    expect(buttons.some((text) => text?.includes('Visualizar PDF'))).toBe(true);
+    expect(buttons.some((text) => text?.includes('Visualizar documento'))).toBe(true);
     http.verify();
   });
 });

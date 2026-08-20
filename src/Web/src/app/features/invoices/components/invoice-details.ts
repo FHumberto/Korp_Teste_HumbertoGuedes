@@ -17,7 +17,7 @@ import { InvoicePrintView } from './invoice-print-view';
     @if (loading()) {
       <div class="rounded-xl border border-slate-200 bg-white p-6"><app-loading-indicator label="Carregando nota fiscal..." /></div>
     } @else if (loadError(); as apiError) {
-      <div class="space-y-4"><app-feedback-message kind="error" title="Não foi possível carregar a nota." [message]="apiError.message" [traceId]="apiError.traceId" /><button type="button" (click)="loadInvoice()" class="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold hover:bg-slate-50">Tentar novamente</button></div>
+      <div class="space-y-4"><app-feedback-message kind="error" title="Não foi possível carregar a nota." [message]="apiError.message" [traceId]="apiError.traceId" /><button type="button" (click)="loadInvoice()" class="inline-flex min-h-10 items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold hover:bg-slate-50 active:bg-slate-100"><span aria-hidden="true">↻</span>Tentar novamente</button></div>
     } @else if (invoice(); as currentInvoice) {
       <app-invoice-print-view [invoice]="currentInvoice" />
       <div class="mt-6 space-y-4 print:hidden" aria-live="polite">
@@ -26,9 +26,9 @@ import { InvoicePrintView } from './invoice-print-view';
         @if (closedSuccessfully()) { <app-feedback-message kind="success" title="Nota fechada com sucesso." message="A baixa do estoque foi confirmada." /> }
       </div>
       @if (currentInvoice.status === 'open') {
-        <div class="mt-6 flex justify-end print:hidden"><app-processing-button (click)="closeAndPrint()" label="Imprimir e fechar" processingLabel="Processando fechamento..." [processing]="closing()" /></div>
+        <div class="mt-6 flex justify-end print:hidden"><app-processing-button (click)="closeAndPrint()" label="Emitir e imprimir" processingLabel="Processando nota..." icon="print" [processing]="closing()" /></div>
       } @else {
-        <div class="mt-6 flex justify-end print:hidden"><app-processing-button (click)="openDocument()" label="Visualizar PDF" processingLabel="Carregando PDF..." [processing]="loadingDocument()" /></div>
+        <div class="mt-6 flex justify-end print:hidden"><app-processing-button (click)="openDocument()" label="Visualizar documento" processingLabel="Carregando documento..." icon="document" [processing]="loadingDocument()" /></div>
       }
     }
   `,

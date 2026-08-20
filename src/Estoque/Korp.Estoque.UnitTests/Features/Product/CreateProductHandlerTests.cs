@@ -80,6 +80,7 @@ public sealed class CreateProductHandlerTests
 
     private sealed class ProductRepositoryStub(bool productCreated = true) : IProductRepository
     {
+        public Task<IReadOnlyList<ProductEntity>> ListAvailableAsync(CancellationToken cancellationToken) => Task.FromResult<IReadOnlyList<ProductEntity>>([]);
         public ProductEntity? SavedProduct { get; private set; }
 
         public Task<bool> TryAddAsync(ProductEntity product, CancellationToken cancellationToken)

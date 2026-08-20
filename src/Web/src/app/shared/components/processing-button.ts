@@ -5,6 +5,8 @@ import { Component, input } from '@angular/core';
   template: `
     <button type="submit" [disabled]="disabled() || processing()" [attr.aria-busy]="processing()" class="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 disabled:cursor-not-allowed disabled:opacity-60">
       @if (processing()) { <span class="size-4 animate-spin rounded-full border-2 border-blue-200 border-t-white" aria-hidden="true"></span> }
+      @else if (icon() === 'print') { <svg aria-hidden="true" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" class="size-4"><path d="M5 7V3h10v4M5 14H3V8h14v6h-2M5 11h10v6H5z" stroke-linecap="round" stroke-linejoin="round" /></svg> }
+      @else if (icon() === 'document') { <svg aria-hidden="true" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" class="size-4"><path d="M5 2h7l3 3v13H5zM12 2v4h3M8 10h4M8 13h4" stroke-linecap="round" stroke-linejoin="round" /></svg> }
       {{ processing() ? processingLabel() : label() }}
     </button>
   `,
@@ -14,4 +16,5 @@ export class ProcessingButton {
   readonly processingLabel = input('Processando...');
   readonly processing = input(false);
   readonly disabled = input(false);
+  readonly icon = input<'none' | 'print' | 'document'>('none');
 }
