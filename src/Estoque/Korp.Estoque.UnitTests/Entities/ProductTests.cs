@@ -21,7 +21,7 @@ public sealed class ProductTests
 
     // Cobre "Cadastro de Produtos": cadastra código, descrição e saldo para uso posterior nas notas.
     [Fact]
-    public void Create_WithValidData_ShouldSetStateAndTimestamps()
+    public void Create_WithValidData_ShouldSetStateAndLeaveUpdatedAtNull()
     {
         var id = Guid.NewGuid();
 
@@ -32,7 +32,7 @@ public sealed class ProductTests
         product.Description.ShouldBe("Produto de demonstração");
         product.Balance.ShouldBe(10);
         product.CreatedAt.ShouldBe(CreatedAt);
-        product.UpdatedAt.ShouldBe(CreatedAt);
+        product.UpdatedAt.ShouldBeNull();
     }
 
     // Cobre "Impressão de Notas Fiscais": a atualização do saldo exige uma quantidade efetivamente utilizada.
@@ -47,7 +47,7 @@ public sealed class ProductTests
 
         ShouldThrowDomainError(action, ProductErrors.InvalidDebitQuantity);
         product.Balance.ShouldBe(10);
-        product.UpdatedAt.ShouldBe(CreatedAt);
+        product.UpdatedAt.ShouldBeNull();
     }
 
     // Cobre "Impressão de Notas Fiscais": a baixa não pode produzir um saldo disponível negativo.
@@ -60,7 +60,7 @@ public sealed class ProductTests
 
         ShouldThrowDomainError(action, ProductErrors.InsufficientStock);
         product.Balance.ShouldBe(1);
-        product.UpdatedAt.ShouldBe(CreatedAt);
+        product.UpdatedAt.ShouldBeNull();
     }
 
     // Cobre o exemplo do desafio: saldo anterior 10 menos a quantidade utilizada 2 resulta em saldo 8.

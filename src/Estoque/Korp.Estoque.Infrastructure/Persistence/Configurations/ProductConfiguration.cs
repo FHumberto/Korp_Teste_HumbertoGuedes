@@ -52,7 +52,7 @@ public sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
             .IsRequired();
 
         builder.Property(product => product.UpdatedAt)
-            .IsRequired();
+            .IsRequired(false);
     }
 
     #endregion

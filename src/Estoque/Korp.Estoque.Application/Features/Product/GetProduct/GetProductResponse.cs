@@ -7,5 +7,5 @@ public sealed record GetProductResponse
     string Description,
     int Balance,
     DateTimeOffset CreatedAt,
-    DateTimeOffset UpdatedAt
+    DateTimeOffset? UpdatedAt
 );

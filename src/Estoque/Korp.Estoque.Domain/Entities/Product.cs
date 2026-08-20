@@ -19,7 +19,7 @@ public sealed class Product : Entity
     public string Description { get; private set; } = string.Empty;
     public int Balance { get; private set; }
     public DateTimeOffset CreatedAt { get; private set; }
-    public DateTimeOffset UpdatedAt { get; private set; }
+    public DateTimeOffset? UpdatedAt { get; private set; }
 
     #endregion
 
