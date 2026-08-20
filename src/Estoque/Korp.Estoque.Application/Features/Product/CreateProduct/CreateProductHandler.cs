@@ -7,14 +7,20 @@ using ProductEntity = Korp.Estoque.Domain.Entities.Product;
 
 namespace Korp.Estoque.Application.Features.Product.CreateProduct;
 
-public sealed class CreateProductHandler(IValidator<CreateProductRequest> validator, IProductRepository productRepository) : ICreateProductUseCase
+public sealed class CreateProductHandler(IValidator<CreateProductRequest> validator, IProductRepository productRepository, ILogger<CreateProductHandler>? logger = null) : ICreateProductUseCase
 {
+    private readonly ILogger<CreateProductHandler> _logger = logger ?? NullLogger<CreateProductHandler>.Instance;
+
     public async Task<Result<CreateProductResponse>> ExecuteAsync(CreateProductRequest request, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Iniciando cadastro do produto com código {ProductCode}.", request.Code);
         ValidationResult validationResult = await validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)
+        {
+            _logger.LogWarning("Cadastro do produto rejeitado por validação. Código {ProductCode}.", request.Code);
             return Result<CreateProductResponse>.Failure(ValidationHelper.ToValidationError(validationResult));
+        }
 
         request.Normalize();
 
@@ -22,8 +28,13 @@ public sealed class CreateProductHandler(IValidator<CreateProductRequest> valida
 
         bool productCreated = await productRepository.TryAddAsync(product, cancellationToken);
 
-        return !productCreated
-            ? Result<CreateProductResponse>.Failure(ProductErrors.CodeAlreadyExists)
-            : Result<CreateProductResponse>.Success(new CreateProductResponse(product.Id, product.Code, product.Description, product.Balance, product.CreatedAt));
+        if (!productCreated)
+        {
+            _logger.LogWarning("Cadastro rejeitado porque o código {ProductCode} já existe.", product.Code);
+            return Result<CreateProductResponse>.Failure(ProductErrors.CodeAlreadyExists);
+        }
+
+        _logger.LogInformation("Produto {ProductId} cadastrado com sucesso.", product.Id);
+        return Result<CreateProductResponse>.Success(new CreateProductResponse(product.Id, product.Code, product.Description, product.Balance, product.CreatedAt));
     }
 }

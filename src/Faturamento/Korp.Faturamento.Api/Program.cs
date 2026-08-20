@@ -6,8 +6,7 @@ using Korp.Faturamento.Infrastructure.Persistence;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-builder.Logging.ClearProviders();
-builder.Logging.AddConsole();
+builder.AddStructuredLogging();
 
 builder.Services.AddApi(builder.Configuration);
 builder.Services.AddApplication();
@@ -19,6 +18,7 @@ if (app.Configuration.GetValue<bool>("Database:ApplyMigrationsOnStartup"))
     await app.Services.ApplyBillingMigrationsAsync();
 
 app.UseExceptionHandler();
+app.UseSerilogRequestLogging();
 app.UseHttpsRedirection();
 app.UseCorsPolicies();
 app.UseRateLimiter();

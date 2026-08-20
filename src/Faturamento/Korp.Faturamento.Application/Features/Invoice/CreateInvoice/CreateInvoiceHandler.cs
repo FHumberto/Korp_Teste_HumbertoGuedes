@@ -12,13 +12,21 @@ public sealed class CreateInvoiceHandler(
     IInventoryGateway inventoryGateway,
     IInvoiceNumberGenerator invoiceNumberGenerator,
     IInvoiceRepository invoiceRepository,
-    TimeProvider timeProvider) : ICreateInvoiceUseCase
+    TimeProvider timeProvider,
+    ILogger<CreateInvoiceHandler>? logger = null) : ICreateInvoiceUseCase
 {
+    private readonly ILogger<CreateInvoiceHandler> _logger = logger ?? NullLogger<CreateInvoiceHandler>.Instance;
+
     public async Task<Result<CreateInvoiceResponse>> ExecuteAsync(CreateInvoiceRequest request, CancellationToken cancellationToken)
     {
+        if (_logger.IsEnabled(LogLevel.Information))
+            _logger.LogInformation("Iniciando criação de nota com {ItemCount} itens.", request.Items?.Count ?? 0);
         ValidationResult validationResult = await validator.ValidateAsync(request, cancellationToken);
         if (!validationResult.IsValid)
+        {
+            _logger.LogWarning("Criação de nota rejeitada por validação.");
             return Result<CreateInvoiceResponse>.Failure(ValidationHelper.ToValidationError(validationResult));
+        }
 
         IReadOnlyCollection<CreateInvoiceItemRequest> items = request.Items!;
 
@@ -28,14 +36,18 @@ public sealed class CreateInvoiceHandler(
             products = await inventoryGateway.GetProductsByIdsAsync(
                 items.Select(item => item.ProductId).ToArray(), cancellationToken);
         }
-        catch (InventoryUnavailableException)
+        catch (InventoryUnavailableException exception)
         {
+            _logger.LogError(exception, "Estoque indisponível durante a criação da nota.");
             return Result<CreateInvoiceResponse>.Failure(CreateInvoiceErrors.InventoryUnavailable);
         }
 
         Dictionary<Guid, InventoryProduct> productsById = products.ToDictionary(product => product.Id);
         if (items.Any(item => !productsById.ContainsKey(item.ProductId)))
+        {
+            _logger.LogWarning("Criação de nota rejeitada porque um ou mais produtos não foram encontrados.");
             return Result<CreateInvoiceResponse>.Failure(CreateInvoiceErrors.ProductNotFound);
+        }
 
         long number = await invoiceNumberGenerator.GetNextAsync(cancellationToken);
         InvoiceEntity invoice = InvoiceEntity.Create(Guid.NewGuid(), number, timeProvider.GetUtcNow());
@@ -48,6 +60,7 @@ public sealed class CreateInvoiceHandler(
 
         await invoiceRepository.AddAsync(invoice, cancellationToken);
 
+        _logger.LogInformation("Nota {InvoiceId}, número {InvoiceNumber}, criada com sucesso.", invoice.Id, invoice.Number);
         return Result<CreateInvoiceResponse>.Success(new CreateInvoiceResponse(
             invoice.Id,
             invoice.Number,

@@ -1,4 +1,4 @@
-using Korp.Estoque.Application.Contracts.Persistence;
+﻿using Korp.Estoque.Application.Contracts.Persistence;
 using Korp.Estoque.Domain.Entities;
 using Korp.Estoque.Infrastructure.Persistence.Repositories;
 using Korp.Estoque.IntegrationTests.Infrastructure;
@@ -115,8 +115,8 @@ public sealed class InventoryPersistenceTests(EstoqueDatabaseFixture fixture) : 
         (await CountOperationsAsync()).ShouldBe(1);
     }
 
-    private static Product CreateProduct(string code, int balance) =>
-        Product.Create(Guid.NewGuid(), code, $"Produto {code}", balance, DateTimeOffset.UtcNow);
+    private static Product CreateProduct(string code, int balance)
+        => Product.Create(Guid.NewGuid(), code, $"Produto {code}", balance, DateTimeOffset.UtcNow);
 
     private static StockDebitPersistenceCommand CreateCommand(
         string idempotencyKey,

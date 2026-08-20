@@ -8,15 +8,22 @@ namespace Korp.Faturamento.Application.Features.Invoice.ListInvoices;
 
 public sealed class ListInvoicesHandler(
     IValidator<ListInvoicesRequest> validator,
-    IInvoiceRepository invoiceRepository) : IListInvoicesUseCase
+    IInvoiceRepository invoiceRepository,
+    ILogger<ListInvoicesHandler>? logger = null) : IListInvoicesUseCase
 {
+    private readonly ILogger<ListInvoicesHandler> _logger = logger ?? NullLogger<ListInvoicesHandler>.Instance;
+
     public async Task<Result<IReadOnlyCollection<ListInvoicesResponse>>> ExecuteAsync(
         ListInvoicesRequest request,
         CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Listando notas com filtro de status {InvoiceStatus}.", request.Status);
         ValidationResult validationResult = await validator.ValidateAsync(request, cancellationToken);
         if (!validationResult.IsValid)
+        {
+            _logger.LogWarning("Listagem de notas rejeitada por validação.");
             return Result<IReadOnlyCollection<ListInvoicesResponse>>.Failure(ValidationHelper.ToValidationError(validationResult));
+        }
 
         InvoiceStatus? status = string.IsNullOrWhiteSpace(request.Status)
             ? null
@@ -24,6 +31,7 @@ public sealed class ListInvoicesHandler(
 
         IReadOnlyCollection<Domain.Entities.Invoice> invoices = await invoiceRepository.ListAsync(status, cancellationToken);
 
+        _logger.LogInformation("Listagem de notas concluída com {InvoiceCount} registros.", invoices.Count);
         return Result<IReadOnlyCollection<ListInvoicesResponse>>.Success(invoices.Select(invoice => new ListInvoicesResponse(
             invoice.Id,
             invoice.Number,

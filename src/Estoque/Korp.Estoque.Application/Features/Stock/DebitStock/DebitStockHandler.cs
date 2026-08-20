@@ -6,22 +6,33 @@ using Korp.Estoque.Domain.Entities.Errors;
 
 namespace Korp.Estoque.Application.Features.Stock.DebitStock;
 
-public sealed class DebitStockHandler(IValidator<DebitStockCommand> validator, IStockDebitRepository stockDebitRepository, TimeProvider timeProvider) : IDebitStockUseCase
+public sealed class DebitStockHandler(IValidator<DebitStockCommand> validator, IStockDebitRepository stockDebitRepository, TimeProvider timeProvider, ILogger<DebitStockHandler>? logger = null) : IDebitStockUseCase
 {
+    private readonly ILogger<DebitStockHandler> _logger = logger ?? NullLogger<DebitStockHandler>.Instance;
+
     #region [ EXECUÇÃO ]
 
     public async Task<Result<DebitStockResponse>> ExecuteAsync(DebitStockCommand command, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Iniciando baixa de estoque da nota {InvoiceId}.", command.InvoiceId);
         ValidationResult validationResult = await validator.ValidateAsync(command, cancellationToken);
 
         if (!validationResult.IsValid)
+        {
+            _logger.LogWarning("Baixa da nota {InvoiceId} rejeitada por validação.", command.InvoiceId);
             return Result<DebitStockResponse>.Failure(ValidationHelper.ToValidationError(validationResult));
+        }
 
         StockDebitPersistenceCommand persistenceCommand = CreatePersistenceCommand(command);
 
         StockDebitPersistenceResult persistenceResult = await stockDebitRepository.DebitAsync(persistenceCommand, cancellationToken);
 
-        return HandlePersistenceResult(persistenceResult);
+        Result<DebitStockResponse> result = HandlePersistenceResult(persistenceResult);
+        if (result.IsSuccess)
+            _logger.LogInformation("Baixa da nota {InvoiceId} concluída. Status {DebitStatus}.", command.InvoiceId, persistenceResult.Status);
+        else
+            _logger.LogWarning("Baixa da nota {InvoiceId} rejeitada. Status {DebitStatus}.", command.InvoiceId, persistenceResult.Status);
+        return result;
     }
 
     #endregion

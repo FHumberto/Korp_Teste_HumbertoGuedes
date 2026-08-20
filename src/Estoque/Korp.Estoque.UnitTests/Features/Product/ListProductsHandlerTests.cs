@@ -65,11 +65,11 @@ public sealed class ListProductsHandlerTests
             return Task.FromResult(page);
         }
 
-        public Task<bool> TryAddAsync(ProductEntity product, CancellationToken cancellationToken) =>
-            Task.FromResult(false);
+        public Task<bool> TryAddAsync(ProductEntity product, CancellationToken cancellationToken)
+            => Task.FromResult(false);
 
-        public Task<ProductEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken) =>
-            Task.FromResult<ProductEntity?>(null);
+        public Task<ProductEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+            => Task.FromResult<ProductEntity?>(null);
 
         public Task<IReadOnlyList<ProductEntity>> GetByIdsAsync(IReadOnlyCollection<Guid> ids, CancellationToken cancellationToken) =>
             Task.FromResult<IReadOnlyList<ProductEntity>>([]);
