@@ -22,5 +22,8 @@ public static class DependencyInjection
 
     private static void ConfigureDatabase(this IServiceCollection services, string connectionString) => services.AddDbContext<InventoryDbContext>(options => options.UseSqlServer(connectionString));
 
-    private static void ConfigureRepositories(this IServiceCollection services) => services.AddScoped<IProductRepository, ProductRepository>();
+    private static void ConfigureRepositories(this IServiceCollection services)
+    {
+        services.AddScoped<IProductRepository, ProductRepository>();
+    }
 }
