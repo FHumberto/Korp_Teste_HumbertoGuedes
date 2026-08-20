@@ -1,12 +1,16 @@
 ﻿using Asp.Versioning;
+using Korp.Estoque.Api.Extensions;
 using Korp.Estoque.Api.Middlewares;
 
 namespace Korp.Estoque.Api;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddApi(this IServiceCollection services)
+    public static IServiceCollection AddApi(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddProblemDetails();
+        services.AddExceptionHandler<ExceptionMiddleware>();
+        services.AddCorsPolicies(configuration);
         services.AddControllers();
         services.AddOpenApi();
 
@@ -22,9 +26,6 @@ public static class DependencyInjection
             options.GroupNameFormat = "'v'VVV";
             options.SubstituteApiVersionInUrl = true;
         });
-
-        services.AddProblemDetails();
-        services.AddExceptionHandler<ExceptionMiddleware>();
 
         return services;
     }
