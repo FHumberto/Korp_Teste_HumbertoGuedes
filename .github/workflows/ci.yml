@@ -1,0 +1,194 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+  DOTNET_NOLOGO: "1"
+  NUGET_XMLDOC_MODE: skip
+
+jobs:
+  estoque:
+    name: Estoque
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v6
+
+      - name: Configurar o .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restaurar dependências
+        run: |
+          dotnet restore src/Estoque/Korp.Estoque.UnitTests/Korp.Estoque.UnitTests.csproj
+          dotnet restore src/Estoque/Korp.Estoque.IntegrationTests/Korp.Estoque.IntegrationTests.csproj
+
+      - name: Compilar
+        run: |
+          dotnet build src/Estoque/Korp.Estoque.UnitTests/Korp.Estoque.UnitTests.csproj --configuration Release --no-restore
+          dotnet build src/Estoque/Korp.Estoque.IntegrationTests/Korp.Estoque.IntegrationTests.csproj --configuration Release --no-restore
+
+      - name: Executar testes unitários
+        run: >-
+          dotnet test src/Estoque/Korp.Estoque.UnitTests/Korp.Estoque.UnitTests.csproj
+          --configuration Release --no-build
+          --logger "trx;LogFileName=estoque-unit.trx"
+          --results-directory artifacts/test-results/estoque-unit
+          --collect "XPlat Code Coverage"
+
+      - name: Executar testes de integração
+        run: >-
+          dotnet test src/Estoque/Korp.Estoque.IntegrationTests/Korp.Estoque.IntegrationTests.csproj
+          --configuration Release --no-build
+          --logger "trx;LogFileName=estoque-integration.trx"
+          --results-directory artifacts/test-results/estoque-integration
+          --collect "XPlat Code Coverage"
+
+      - name: Publicar resultados
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resultados-estoque
+          path: artifacts/test-results/estoque-*
+          if-no-files-found: warn
+          retention-days: 14
+
+  faturamento:
+    name: Faturamento
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v6
+
+      - name: Configurar o .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restaurar dependências
+        run: |
+          dotnet restore src/Faturamento/Korp.Faturamento.UnitTests/Korp.Faturamento.UnitTests.csproj
+          dotnet restore src/Faturamento/Korp.Faturamento.IntegrationTests/Korp.Faturamento.IntegrationTests.csproj
+
+      - name: Compilar
+        run: |
+          dotnet build src/Faturamento/Korp.Faturamento.UnitTests/Korp.Faturamento.UnitTests.csproj --configuration Release --no-restore
+          dotnet build src/Faturamento/Korp.Faturamento.IntegrationTests/Korp.Faturamento.IntegrationTests.csproj --configuration Release --no-restore
+
+      - name: Executar testes unitários
+        run: >-
+          dotnet test src/Faturamento/Korp.Faturamento.UnitTests/Korp.Faturamento.UnitTests.csproj
+          --configuration Release --no-build
+          --logger "trx;LogFileName=faturamento-unit.trx"
+          --results-directory artifacts/test-results/faturamento-unit
+          --collect "XPlat Code Coverage"
+
+      - name: Executar testes de integração
+        run: >-
+          dotnet test src/Faturamento/Korp.Faturamento.IntegrationTests/Korp.Faturamento.IntegrationTests.csproj
+          --configuration Release --no-build
+          --logger "trx;LogFileName=faturamento-integration.trx"
+          --results-directory artifacts/test-results/faturamento-integration
+          --collect "XPlat Code Coverage"
+
+      - name: Publicar resultados
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resultados-faturamento
+          path: artifacts/test-results/faturamento-*
+          if-no-files-found: warn
+          retention-days: 14
+
+  frontend:
+    name: Frontend
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: src/Web
+
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v6
+
+      - name: Configurar o Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: src/Web/.nvmrc
+          cache: npm
+          cache-dependency-path: src/Web/package-lock.json
+
+      - name: Configurar o npm
+        run: npm install --global npm@11.17.0
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Executar testes
+        run: npm test -- --watch=false
+
+      - name: Compilar para produção
+        run: npm run build
+
+  containers:
+    name: Containers
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v6
+
+      - name: Construir a imagem de Estoque
+        run: docker build --file src/Estoque/Korp.Estoque.Api/Dockerfile --tag korp-estoque:ci .
+
+      - name: Construir a imagem de Faturamento
+        run: docker build --file src/Faturamento/Korp.Faturamento.Api/Dockerfile --tag korp-faturamento:ci .
+
+      - name: Construir a imagem do frontend
+        run: docker build --file src/Web/Dockerfile --tag korp-web:ci src/Web
+
+  gate:
+    name: CI / Gate
+    if: always()
+    needs:
+      - estoque
+      - faturamento
+      - frontend
+      - containers
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+
+    steps:
+      - name: Verificar todas as etapas obrigatórias
+        env:
+          ESTOQUE_RESULT: ${{ needs.estoque.result }}
+          FATURAMENTO_RESULT: ${{ needs.faturamento.result }}
+          FRONTEND_RESULT: ${{ needs.frontend.result }}
+          CONTAINERS_RESULT: ${{ needs.containers.result }}
+        run: |
+          test "$ESTOQUE_RESULT" = "success"
+          test "$FATURAMENTO_RESULT" = "success"
+          test "$FRONTEND_RESULT" = "success"
+          test "$CONTAINERS_RESULT" = "success"
