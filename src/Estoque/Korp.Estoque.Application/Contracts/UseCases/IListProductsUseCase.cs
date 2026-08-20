@@ -1,6 +1,4 @@
-﻿using Korp.Estoque.Application.Abstractions.Wrappers;
-using Korp.Estoque.Application.Features.Product.ListProducts;
-using Korp.Estoque.Domain.Abstractions.Types;
+﻿using Korp.Estoque.Application.Features.Product.ListProducts;
 
 namespace Korp.Estoque.Application.Contracts.UseCases;
 

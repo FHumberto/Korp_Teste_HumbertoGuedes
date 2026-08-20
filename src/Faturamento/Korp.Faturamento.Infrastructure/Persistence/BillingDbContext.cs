@@ -1,7 +1,4 @@
-using Korp.Faturamento.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
-
-namespace Korp.Faturamento.Infrastructure.Persistence;
+﻿namespace Korp.Faturamento.Infrastructure.Persistence;
 
 public sealed class BillingDbContext(DbContextOptions<BillingDbContext> options) : DbContext(options)
 {

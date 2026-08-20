@@ -3,7 +3,6 @@ using Korp.Estoque.Application.Contracts.Persistence;
 using Korp.Estoque.Application.Features.Product.GetProductsByIds;
 using Korp.Estoque.Domain.Abstractions.Types;
 using Korp.Estoque.Domain.Entities.Errors;
-using Shouldly;
 using ProductEntity = Korp.Estoque.Domain.Entities.Product;
 
 namespace Korp.Estoque.UnitTests.Features.Product;

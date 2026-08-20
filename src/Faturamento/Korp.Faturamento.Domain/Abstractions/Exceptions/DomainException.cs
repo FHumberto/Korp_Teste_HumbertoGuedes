@@ -1,6 +1,4 @@
-﻿using Korp.Faturamento.Domain.Abstractions.Types;
-
-namespace Korp.Faturamento.Domain.Abstractions.Exceptions;
+﻿namespace Korp.Faturamento.Domain.Abstractions.Exceptions;
 
 public sealed class DomainException : Exception
 {

@@ -2,7 +2,6 @@
 using Korp.Faturamento.Application.Contracts.Persistence;
 using Korp.Faturamento.Application.Features.Invoice.ListInvoices;
 using Korp.Faturamento.Domain.Enums;
-using Shouldly;
 using InvoiceEntity = Korp.Faturamento.Domain.Entities.Invoice;
 
 namespace Korp.Faturamento.UnitTests.Features.Invoice;

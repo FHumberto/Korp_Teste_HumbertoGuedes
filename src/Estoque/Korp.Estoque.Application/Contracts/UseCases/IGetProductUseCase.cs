@@ -1,5 +1,4 @@
-﻿using Korp.Estoque.Application.Abstractions.Wrappers;
-using Korp.Estoque.Application.Features.Product.GetProduct;
+﻿using Korp.Estoque.Application.Features.Product.GetProduct;
 
 namespace Korp.Estoque.Application.Contracts.UseCases;
 

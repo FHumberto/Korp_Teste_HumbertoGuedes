@@ -1,6 +1,5 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Korp.Faturamento.Domain.Abstractions.Types;
 
 namespace Korp.Faturamento.Application.Abstractions.Wrappers;
 

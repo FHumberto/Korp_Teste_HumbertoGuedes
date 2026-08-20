@@ -1,7 +1,5 @@
-﻿using Korp.Estoque.Application.Contracts.Persistence;
-using Korp.Estoque.Infrastructure.Persistence;
+﻿using Korp.Estoque.Infrastructure.Persistence;
 using Korp.Estoque.Infrastructure.Persistence.Repositories;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

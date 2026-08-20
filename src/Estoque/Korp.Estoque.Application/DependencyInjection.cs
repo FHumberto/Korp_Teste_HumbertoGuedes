@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using Korp.Estoque.Application.Contracts.UseCases;
+﻿using Korp.Estoque.Application.Contracts.UseCases;
 using Korp.Estoque.Application.Features.Product.CreateProduct;
 using Korp.Estoque.Application.Features.Product.GetProduct;
 using Korp.Estoque.Application.Features.Product.GetProductsByIds;

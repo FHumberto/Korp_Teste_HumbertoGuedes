@@ -1,7 +1,6 @@
-using Korp.Estoque.Application.Abstractions.Wrappers;
+﻿using Korp.Estoque.Application.Abstractions.Wrappers;
 using Korp.Estoque.Application.Contracts.Persistence;
 using Korp.Estoque.Application.Features.Stock.DebitStock;
-using Shouldly;
 
 namespace Korp.Estoque.UnitTests.Features.Stock;
 

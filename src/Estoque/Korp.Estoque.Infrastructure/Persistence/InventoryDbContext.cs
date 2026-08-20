@@ -1,7 +1,4 @@
-﻿using Korp.Estoque.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
-
-namespace Korp.Estoque.Infrastructure.Persistence;
+﻿namespace Korp.Estoque.Infrastructure.Persistence;
 
 public sealed class InventoryDbContext(DbContextOptions<InventoryDbContext> options) : DbContext(options)
 {

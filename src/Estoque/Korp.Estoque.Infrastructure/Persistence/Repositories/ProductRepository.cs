@@ -1,8 +1,5 @@
-﻿using Korp.Estoque.Application.Contracts.Persistence;
-using Korp.Estoque.Domain.Abstractions.Types;
-using Korp.Estoque.Domain.Entities;
+﻿using Korp.Estoque.Domain.Abstractions.Types;
 using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
 
 namespace Korp.Estoque.Infrastructure.Persistence.Repositories;
 

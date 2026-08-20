@@ -1,6 +1,4 @@
-﻿using Korp.Faturamento.Domain.Abstractions.Exceptions;
-using Korp.Faturamento.Domain.Abstractions.Types;
-using Korp.Faturamento.Domain.Entities.Errors;
+﻿using Korp.Faturamento.Domain.Entities.Errors;
 using Korp.Faturamento.Domain.Enums;
 
 namespace Korp.Faturamento.Domain.Entities;

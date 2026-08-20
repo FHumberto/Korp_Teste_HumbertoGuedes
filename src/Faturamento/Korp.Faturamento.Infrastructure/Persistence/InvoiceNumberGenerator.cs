@@ -1,7 +1,5 @@
-using System.Data;
+﻿using System.Data;
 using System.Data.Common;
-using Korp.Faturamento.Application.Contracts.Persistence;
-using Microsoft.EntityFrameworkCore;
 
 namespace Korp.Faturamento.Infrastructure.Persistence;
 

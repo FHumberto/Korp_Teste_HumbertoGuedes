@@ -1,7 +1,4 @@
-﻿using Korp.Estoque.Application.Contracts.Persistence;
-using Korp.Estoque.Domain.Entities;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Korp.Estoque.Infrastructure.Persistence.Repositories;

@@ -1,6 +1,4 @@
-using FluentValidation;
-
-namespace Korp.Faturamento.Application.Features.Invoice.ListInvoices;
+﻿namespace Korp.Faturamento.Application.Features.Invoice.ListInvoices;
 
 public sealed class ListInvoicesValidator : AbstractValidator<ListInvoicesRequest>
 {

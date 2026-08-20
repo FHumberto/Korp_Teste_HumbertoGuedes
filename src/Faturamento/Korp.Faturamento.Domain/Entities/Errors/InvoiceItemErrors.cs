@@ -1,6 +1,4 @@
-using Korp.Faturamento.Domain.Abstractions.Types;
-
-namespace Korp.Faturamento.Domain.Entities.Errors;
+﻿namespace Korp.Faturamento.Domain.Entities.Errors;
 
 public static class InvoiceItemErrors
 {

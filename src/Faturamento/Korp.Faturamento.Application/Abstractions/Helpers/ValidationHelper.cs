@@ -1,5 +1,4 @@
-using FluentValidation.Results;
-using Korp.Faturamento.Domain.Abstractions.Types;
+﻿using FluentValidation.Results;
 
 namespace Korp.Faturamento.Application.Abstractions.Helpers;
 

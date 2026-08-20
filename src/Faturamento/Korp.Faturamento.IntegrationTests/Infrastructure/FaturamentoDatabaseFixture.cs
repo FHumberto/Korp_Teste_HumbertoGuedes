@@ -1,7 +1,5 @@
 ﻿using Korp.Estoque.Infrastructure.Persistence;
-using Korp.Faturamento.Infrastructure.Persistence;
 using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
 using Testcontainers.MsSql;
 
 namespace Korp.Faturamento.IntegrationTests.Infrastructure;

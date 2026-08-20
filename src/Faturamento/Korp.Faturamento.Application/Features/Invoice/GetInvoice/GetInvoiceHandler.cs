@@ -1,5 +1,4 @@
-using Korp.Faturamento.Application.Abstractions.Wrappers;
-using Korp.Faturamento.Application.Contracts.Persistence;
+﻿using Korp.Faturamento.Application.Contracts.Persistence;
 using Korp.Faturamento.Application.Contracts.UseCases;
 using Korp.Faturamento.Domain.Entities.Errors;
 

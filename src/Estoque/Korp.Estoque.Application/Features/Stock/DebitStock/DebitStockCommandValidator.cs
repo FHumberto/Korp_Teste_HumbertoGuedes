@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using Korp.Estoque.Domain.Entities;
+﻿using Korp.Estoque.Domain.Entities;
 using Korp.Estoque.Domain.Entities.Errors;
 
 namespace Korp.Estoque.Application.Features.Stock.DebitStock;

@@ -1,5 +1,4 @@
 ﻿using FluentValidation.Results;
-using Korp.Estoque.Domain.Abstractions.Types;
 
 namespace Korp.Estoque.Application.Abstractions.Helpers;
 

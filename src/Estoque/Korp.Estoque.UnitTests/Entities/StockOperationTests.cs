@@ -1,7 +1,5 @@
-using Korp.Estoque.Domain.Abstractions.Exceptions;
-using Korp.Estoque.Domain.Entities;
+﻿using Korp.Estoque.Domain.Abstractions.Exceptions;
 using Korp.Estoque.Domain.Entities.Errors;
-using Shouldly;
 
 namespace Korp.Estoque.UnitTests.Entities;
 

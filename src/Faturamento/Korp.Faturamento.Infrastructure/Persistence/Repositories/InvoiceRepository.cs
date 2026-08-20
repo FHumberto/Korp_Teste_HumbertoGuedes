@@ -1,7 +1,4 @@
-using Korp.Faturamento.Application.Contracts.Persistence;
-using Korp.Faturamento.Domain.Entities;
-using Korp.Faturamento.Domain.Enums;
-using Microsoft.EntityFrameworkCore;
+﻿using Korp.Faturamento.Domain.Enums;
 
 namespace Korp.Faturamento.Infrastructure.Persistence.Repositories;
 

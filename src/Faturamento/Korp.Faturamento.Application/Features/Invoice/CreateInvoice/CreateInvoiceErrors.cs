@@ -1,6 +1,4 @@
-using Korp.Faturamento.Domain.Abstractions.Types;
-
-namespace Korp.Faturamento.Application.Features.Invoice.CreateInvoice;
+﻿namespace Korp.Faturamento.Application.Features.Invoice.CreateInvoice;
 
 public static class CreateInvoiceErrors
 {

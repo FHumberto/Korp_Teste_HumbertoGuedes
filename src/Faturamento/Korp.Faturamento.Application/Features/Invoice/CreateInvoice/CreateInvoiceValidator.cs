@@ -1,5 +1,4 @@
-using FluentValidation;
-using Korp.Faturamento.Domain.Entities.Errors;
+﻿using Korp.Faturamento.Domain.Entities.Errors;
 
 namespace Korp.Faturamento.Application.Features.Invoice.CreateInvoice;
 

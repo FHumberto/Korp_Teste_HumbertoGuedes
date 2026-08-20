@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Korp.Estoque.Domain.Abstractions.Types;
 
 namespace Korp.Estoque.Application.Abstractions.Wrappers;
 

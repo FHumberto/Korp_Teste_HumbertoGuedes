@@ -1,7 +1,5 @@
-﻿using FluentValidation;
-using FluentValidation.Results;
+﻿using FluentValidation.Results;
 using Korp.Estoque.Application.Abstractions.Helpers;
-using Korp.Estoque.Application.Abstractions.Wrappers;
 using Korp.Estoque.Application.Contracts.Persistence;
 using Korp.Estoque.Application.Contracts.UseCases;
 using Korp.Estoque.Domain.Entities.Errors;

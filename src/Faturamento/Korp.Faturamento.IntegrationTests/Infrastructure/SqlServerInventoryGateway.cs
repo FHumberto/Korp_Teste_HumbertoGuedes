@@ -4,7 +4,6 @@ using Korp.Estoque.Application.Features.Stock.DebitStock;
 using Korp.Estoque.Infrastructure.Persistence;
 using Korp.Estoque.Infrastructure.Persistence.Repositories;
 using Korp.Faturamento.Application.Contracts.Gateways;
-using Microsoft.EntityFrameworkCore;
 using BillingDebitCommand = Korp.Faturamento.Application.Contracts.Gateways.DebitStockCommand;
 using InventoryDebitCommand = Korp.Estoque.Application.Features.Stock.DebitStock.DebitStockCommand;
 

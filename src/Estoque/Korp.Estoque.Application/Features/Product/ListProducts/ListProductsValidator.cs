@@ -1,6 +1,4 @@
-using FluentValidation;
-
-namespace Korp.Estoque.Application.Features.Product.ListProducts;
+﻿namespace Korp.Estoque.Application.Features.Product.ListProducts;
 
 public sealed class ListProductsValidator : AbstractValidator<ListProductsRequest>
 {

@@ -1,5 +1,4 @@
-using Korp.Faturamento.Domain.Abstractions.Types;
-using Microsoft.AspNetCore.Mvc;
+﻿using Korp.Faturamento.Domain.Abstractions.Types;
 
 namespace Korp.Faturamento.Api.Controllers;
 

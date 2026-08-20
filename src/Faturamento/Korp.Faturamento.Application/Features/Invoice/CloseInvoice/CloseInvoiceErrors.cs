@@ -1,6 +1,4 @@
-using Korp.Faturamento.Domain.Abstractions.Types;
-
-namespace Korp.Faturamento.Application.Features.Invoice.CloseInvoice;
+﻿namespace Korp.Faturamento.Application.Features.Invoice.CloseInvoice;
 
 public static class CloseInvoiceErrors
 {

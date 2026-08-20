@@ -1,6 +1,4 @@
-﻿using Korp.Estoque.Domain.Abstractions.Types;
-
-namespace Korp.Estoque.Domain.Entities.Errors;
+﻿namespace Korp.Estoque.Domain.Entities.Errors;
 
 public static class ProductErrors
 {

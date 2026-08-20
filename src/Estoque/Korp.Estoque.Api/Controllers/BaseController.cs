@@ -1,5 +1,4 @@
 ﻿using Korp.Estoque.Domain.Abstractions.Types;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Korp.Estoque.Api.Controllers;
 

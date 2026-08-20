@@ -1,9 +1,7 @@
-using Korp.Faturamento.Application.Contracts.Gateways;
-using Korp.Faturamento.Application.Contracts.Persistence;
+﻿using Korp.Faturamento.Application.Contracts.Gateways;
 using Korp.Faturamento.Infrastructure.Gateways;
 using Korp.Faturamento.Infrastructure.Persistence;
 using Korp.Faturamento.Infrastructure.Persistence.Repositories;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

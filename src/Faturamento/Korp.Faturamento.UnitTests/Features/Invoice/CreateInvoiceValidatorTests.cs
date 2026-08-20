@@ -1,6 +1,5 @@
 ﻿using FluentValidation.Results;
 using Korp.Faturamento.Application.Features.Invoice.CreateInvoice;
-using Shouldly;
 
 namespace Korp.Faturamento.UnitTests.Features.Invoice;
 

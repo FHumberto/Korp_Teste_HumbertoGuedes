@@ -3,11 +3,8 @@ using Korp.Estoque.Infrastructure.Persistence;
 using Korp.Faturamento.Application.Abstractions.Wrappers;
 using Korp.Faturamento.Application.Features.Invoice.CloseInvoice;
 using Korp.Faturamento.Application.Features.Invoice.CreateInvoice;
-using Korp.Faturamento.Infrastructure.Persistence;
 using Korp.Faturamento.Infrastructure.Persistence.Repositories;
 using Korp.Faturamento.IntegrationTests.Infrastructure;
-using Microsoft.EntityFrameworkCore;
-using Shouldly;
 
 namespace Korp.Faturamento.IntegrationTests.Closing;
 

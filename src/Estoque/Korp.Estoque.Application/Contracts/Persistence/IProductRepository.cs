@@ -1,5 +1,4 @@
-﻿using Korp.Estoque.Domain.Abstractions.Types;
-using Korp.Estoque.Domain.Entities;
+﻿using Korp.Estoque.Domain.Entities;
 
 namespace Korp.Estoque.Application.Contracts.Persistence;
 

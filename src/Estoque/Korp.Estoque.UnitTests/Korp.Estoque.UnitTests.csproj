@@ -26,8 +26,4 @@
     <ProjectReference Include="..\Korp.Estoque.Domain\Korp.Estoque.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Using Include="Xunit" />
-  </ItemGroup>
-
 </Project>

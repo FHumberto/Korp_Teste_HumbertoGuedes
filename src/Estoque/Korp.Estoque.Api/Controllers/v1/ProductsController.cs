@@ -1,12 +1,10 @@
 ﻿using Asp.Versioning;
-using Korp.Estoque.Application.Abstractions.Wrappers;
 using Korp.Estoque.Application.Contracts.UseCases;
 using Korp.Estoque.Application.Features.Product.CreateProduct;
 using Korp.Estoque.Application.Features.Product.GetProduct;
 using Korp.Estoque.Application.Features.Product.GetProductsByIds;
 using Korp.Estoque.Application.Features.Product.ListProducts;
 using Korp.Estoque.Domain.Abstractions.Types;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Korp.Estoque.Api.Controllers.v1;
 

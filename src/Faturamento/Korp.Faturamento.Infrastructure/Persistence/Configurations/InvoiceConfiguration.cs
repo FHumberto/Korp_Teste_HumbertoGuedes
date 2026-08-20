@@ -1,6 +1,4 @@
-using Korp.Faturamento.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Korp.Faturamento.Infrastructure.Persistence.Configurations;
 

@@ -1,8 +1,6 @@
 ﻿using Asp.Versioning;
-using Korp.Estoque.Application.Abstractions.Wrappers;
 using Korp.Estoque.Application.Contracts.UseCases;
 using Korp.Estoque.Application.Features.Stock.DebitStock;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Korp.Estoque.Api.Controllers.v1;
 

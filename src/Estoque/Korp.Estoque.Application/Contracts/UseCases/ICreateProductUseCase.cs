@@ -1,5 +1,4 @@
-﻿using Korp.Estoque.Application.Abstractions.Wrappers;
-using Korp.Estoque.Application.Features.Product.CreateProduct;
+﻿using Korp.Estoque.Application.Features.Product.CreateProduct;
 
 namespace Korp.Estoque.Application.Contracts.UseCases;
 

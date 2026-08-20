@@ -1,8 +1,6 @@
-using Korp.Faturamento.Domain.Enums;
-using Korp.Faturamento.Infrastructure.Persistence;
+﻿using Korp.Faturamento.Domain.Enums;
 using Korp.Faturamento.Infrastructure.Persistence.Repositories;
 using Korp.Faturamento.IntegrationTests.Infrastructure;
-using Shouldly;
 using InvoiceEntity = Korp.Faturamento.Domain.Entities.Invoice;
 
 namespace Korp.Faturamento.IntegrationTests.Persistence;

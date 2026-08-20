@@ -1,5 +1,4 @@
-using Korp.Faturamento.Application.Abstractions.Wrappers;
-using Korp.Faturamento.Application.Features.Invoice.GetInvoice;
+﻿using Korp.Faturamento.Application.Features.Invoice.GetInvoice;
 
 namespace Korp.Faturamento.Application.Contracts.UseCases;
 

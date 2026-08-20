@@ -1,6 +1,4 @@
-﻿using Korp.Estoque.Domain.Abstractions.Types;
-
-namespace Korp.Estoque.Domain.Abstractions.Exceptions;
+﻿namespace Korp.Estoque.Domain.Abstractions.Exceptions;
 
 public sealed class DomainException : Exception
 {

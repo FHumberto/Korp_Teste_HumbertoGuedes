@@ -1,8 +1,7 @@
-using Korp.Estoque.Application.Abstractions.Wrappers;
+﻿using Korp.Estoque.Application.Abstractions.Wrappers;
 using Korp.Estoque.Application.Contracts.Persistence;
 using Korp.Estoque.Application.Features.Product.ListProducts;
 using Korp.Estoque.Domain.Abstractions.Types;
-using Shouldly;
 using ProductEntity = Korp.Estoque.Domain.Entities.Product;
 
 namespace Korp.Estoque.UnitTests.Features.Product;

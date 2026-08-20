@@ -1,6 +1,5 @@
-using FluentValidation.Results;
+﻿using FluentValidation.Results;
 using Korp.Estoque.Application.Features.Stock.DebitStock;
-using Shouldly;
 
 namespace Korp.Estoque.UnitTests.Features.Stock;
 

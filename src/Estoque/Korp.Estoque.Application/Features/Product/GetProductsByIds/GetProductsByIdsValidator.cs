@@ -1,5 +1,4 @@
-using FluentValidation;
-using Korp.Estoque.Domain.Entities.Errors;
+﻿using Korp.Estoque.Domain.Entities.Errors;
 
 namespace Korp.Estoque.Application.Features.Product.GetProductsByIds;
 

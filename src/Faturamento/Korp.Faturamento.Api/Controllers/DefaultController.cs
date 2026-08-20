@@ -1,5 +1,4 @@
-using Asp.Versioning;
-using Microsoft.AspNetCore.Mvc;
+﻿using Asp.Versioning;
 
 namespace Korp.Faturamento.Api.Controllers;
 
