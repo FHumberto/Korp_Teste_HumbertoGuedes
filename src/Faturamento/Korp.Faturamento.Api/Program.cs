@@ -1,16 +1,19 @@
-﻿WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+using Korp.Faturamento.Api;
+using Korp.Faturamento.Api.Extensions;
 
-builder.Services.AddControllers();
-builder.Services.AddOpenApi();
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddApi(builder.Configuration);
 
 WebApplication app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
-
+app.UseExceptionHandler();
 app.UseHttpsRedirection();
+app.UseCorsPolicies();
+app.UseRateLimiter();
 app.UseAuthorization();
+app.UseScalarDocumentation();
+
 app.MapControllers();
+
 await app.RunAsync();
