@@ -4,16 +4,7 @@ import { ProductCreateForm } from '../components/product-create-form';
 
 @Component({
   imports: [ProductCreateForm, RouterLink],
-  template: `
-    <section class="mx-auto max-w-2xl">
-      <a routerLink="/products" class="text-sm font-semibold text-blue-700 hover:text-blue-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700">← Voltar para produtos</a>
-      <div class="mt-5"><p class="text-sm font-semibold text-blue-700">Estoque</p><h1 class="mt-1 text-3xl font-bold tracking-tight">Novo produto</h1><p class="mt-2 text-slate-600">Cadastre os dados que serão utilizados nas notas fiscais.</p></div>
-
-      <div class="mt-8 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <app-product-create-form (created)="onCreated()" (cancelled)="onCancelled()" />
-      </div>
-    </section>
-  `,
+  templateUrl: './product-create-page.html',
 })
 export class ProductCreatePage {
   private readonly router = inject(Router);

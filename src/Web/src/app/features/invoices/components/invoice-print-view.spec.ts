@@ -4,7 +4,7 @@ import { InvoicePrintView } from './invoice-print-view';
 
 @Component({
   imports: [InvoicePrintView],
-  template: `<app-invoice-print-view [invoice]="invoice" />`,
+  templateUrl: './invoice-print-view-test-host.html',
 })
 class TestHost {
   readonly invoice = {

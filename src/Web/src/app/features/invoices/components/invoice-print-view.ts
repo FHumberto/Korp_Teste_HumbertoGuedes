@@ -7,36 +7,7 @@ import { InvoiceNumberPipe } from './invoice-number.pipe';
   selector: 'app-invoice-print-view',
   imports: [DatePipe, InvoiceNumberPipe],
   host: { class: 'block' },
-  template: `
-    <article class="print-sheet" aria-labelledby="invoice-title">
-      <header class="flex flex-wrap items-start justify-between gap-5 border-b-2 border-slate-800 pb-5">
-        <div>
-          <p class="text-xs font-bold uppercase tracking-widest text-blue-800 print:text-black">Documento simplificado</p>
-          <h1 id="invoice-title" class="mt-2 text-3xl font-bold tracking-tight">{{ invoice().number | invoiceNumber }}</h1>
-          <p class="mt-2 text-sm text-slate-600 print:text-slate-800">Emitida em {{ invoice().createdAt | date:'dd/MM/yyyy HH:mm' }}</p>
-        </div>
-        <dl class="grid min-w-44 gap-2 text-sm">
-          <div class="flex items-center justify-between gap-4"><dt class="font-semibold text-slate-600 print:text-slate-800">Status</dt><dd class="font-bold">{{ invoice().status === 'open' ? 'Aberta' : 'Fechada' }}</dd></div>
-          @if (invoice().closedAt) { <div class="flex items-center justify-between gap-4"><dt class="font-semibold text-slate-600 print:text-slate-800">Fechamento</dt><dd>{{ invoice().closedAt | date:'dd/MM/yyyy HH:mm' }}</dd></div> }
-        </dl>
-      </header>
-
-      <div class="mt-6 overflow-x-auto print:overflow-visible">
-        <table class="invoice-items-table w-full border-collapse text-left text-sm">
-          <caption class="sr-only">Itens da nota fiscal {{ invoice().number | invoiceNumber }}</caption>
-          <thead><tr class="border-y border-slate-400 bg-slate-100 print:bg-transparent"><th scope="col" class="px-3 py-3 font-bold">Código</th><th scope="col" class="px-3 py-3 font-bold">Descrição</th><th scope="col" class="px-3 py-3 text-right font-bold">Quantidade</th></tr></thead>
-          <tbody class="divide-y divide-slate-300">
-            @for (item of invoice().items; track item.productId) { <tr><td class="whitespace-nowrap px-3 py-3 font-medium">{{ item.productCode }}</td><td class="px-3 py-3">{{ item.productDescription }}</td><td class="px-3 py-3 text-right font-semibold tabular-nums">{{ item.quantity }}</td></tr> }
-          </tbody>
-          <tfoot><tr class="border-t-2 border-slate-800"><th colspan="2" scope="row" class="px-3 py-3 text-right font-bold">Produtos distintos</th><td class="px-3 py-3 text-right font-bold tabular-nums">{{ invoice().items.length }}</td></tr></tfoot>
-        </table>
-      </div>
-
-      <footer class="mt-10 border-t border-slate-300 pt-4 text-center text-xs text-slate-500 print:text-slate-700">
-        Documento demonstrativo sem validade fiscal. Não corresponde a NF-e ou DANFE oficial.
-      </footer>
-    </article>
-  `,
+  templateUrl: './invoice-print-view.html',
 })
 export class InvoicePrintView {
   readonly invoice = input.required<Invoice>();

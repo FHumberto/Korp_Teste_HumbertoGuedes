@@ -5,19 +5,7 @@ export type FeedbackKind = 'error' | 'success' | 'info';
 @Component({
   selector: 'app-feedback-message',
   host: { class: 'block' },
-  template: `
-    @if (visible()) { <div
-      class="rounded-lg border p-4 text-sm"
-      [class]="classes()"
-      [attr.role]="kind() === 'error' ? 'alert' : 'status'"
-      aria-live="polite"
-    >
-      <div class="flex items-start justify-between gap-4">
-        <div><p class="font-semibold">{{ title() }}</p>@if (message()) { <p class="mt-1">{{ message() }}</p> }@if (traceId()) { <p class="mt-2 text-xs opacity-80">Referência: {{ traceId() }}</p> }</div>
-        <button type="button" (click)="dismiss()" class="-m-1 shrink-0 rounded-md p-1 text-lg leading-none opacity-70 hover:bg-black/5 hover:opacity-100" aria-label="Fechar mensagem">×</button>
-      </div>
-    </div> }
-  `,
+  templateUrl: './feedback-message.html',
 })
 export class FeedbackMessage implements OnInit, OnDestroy {
   readonly kind = input<FeedbackKind>('info');

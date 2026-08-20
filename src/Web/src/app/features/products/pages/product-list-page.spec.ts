@@ -16,6 +16,23 @@ describe('ProductListPage', () => {
     fixture.detectChanges();
     expect(fixture.nativeElement.textContent).toContain('PROD-001');
     expect(fixture.nativeElement.textContent).toContain('Produto de teste');
+    expect(fixture.nativeElement.textContent).toContain('Página 1 de 1');
+    expect(fixture.nativeElement.querySelector('[aria-label="Paginação de produtos"]')).toBeNull();
+    http.verify();
+  });
+
+  it('should display pagination controls when there is more than one page', async () => {
+    TestBed.configureTestingModule({ imports: [ProductListPage], providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([]), { provide: API_ENDPOINTS, useValue: { inventory: 'http://inventory/api/v1', billing: '' } }] });
+    const fixture = TestBed.createComponent(ProductListPage);
+    const http = TestBed.inject(HttpTestingController);
+    fixture.detectChanges();
+    http.expectOne((request) => request.url === 'http://inventory/api/v1/products').flush({ items: [{ id: 'product-1', code: 'PROD-001', description: 'Produto', balance: 8 }], totalRecords: 21, pageNumber: 1, pageSize: 20, totalPages: 2 });
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const pagination = fixture.nativeElement.querySelector('[aria-label="Paginação de produtos"]') as HTMLElement;
+    expect(pagination).not.toBeNull();
+    expect(pagination.textContent).toContain('Página 1 de 2');
     http.verify();
   });
 

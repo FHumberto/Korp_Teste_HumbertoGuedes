@@ -1,0 +1,5 @@
+    <section class="mx-auto max-w-4xl">
+      <a routerLink="/invoices" class="text-sm font-semibold text-blue-700 hover:text-blue-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700">← Voltar para notas fiscais</a>
+      <div class="mt-5"><p class="text-sm font-semibold text-blue-700">Faturamento</p><h1 class="mt-1 text-3xl font-bold tracking-tight">Nova nota fiscal</h1><p class="mt-2 text-slate-600">Adicione os produtos e as quantidades.</p></div>
+      <div class="mt-8"><app-invoice-create-form (created)="onCreated($event)" (cancelled)="onCancelled()" /></div>
+    </section>

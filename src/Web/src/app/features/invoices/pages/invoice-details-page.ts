@@ -4,12 +4,7 @@ import { InvoiceDetails } from '../components/invoice-details';
 
 @Component({
   imports: [InvoiceDetails, RouterLink],
-  template: `
-    <section>
-      <div class="print:hidden"><a routerLink="/invoices" class="text-sm font-semibold text-blue-700 hover:text-blue-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700">← Voltar para notas fiscais</a></div>
-      <div class="mt-5"><app-invoice-details [invoiceId]="invoiceId" /></div>
-    </section>
-  `,
+  templateUrl: './invoice-details-page.html',
 })
 export class InvoiceDetailsPage {
   protected readonly invoiceId = inject(ActivatedRoute).snapshot.paramMap.get('id') ?? '';

@@ -26,47 +26,7 @@ const itemSchema = schema<InvoiceDraftItem>((item) => {
 @Component({
   selector: 'app-invoice-create-form',
   imports: [EmptyState, FeedbackMessage, FormField, LoadingIndicator, ProcessingButton, RouterLink],
-  template: `
-        @if (productsLoading()) { <div class="rounded-xl border border-slate-200 bg-white p-6"><app-loading-indicator label="Carregando produtos..." /></div> }
-        @else if (productsError(); as apiError) { <div class="space-y-3"><app-feedback-message kind="error" title="Não foi possível carregar os produtos." [message]="apiError.message" [traceId]="apiError.traceId" /><button type="button" (click)="loadProducts()" class="inline-flex min-h-10 items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold hover:bg-slate-50 active:bg-slate-100"><span aria-hidden="true">↻</span>Tentar novamente</button></div> }
-        @else if (products().length === 0) { <div class="space-y-4"><app-empty-state title="Nenhum produto com saldo disponível" description="Cadastre um produto com saldo inicial positivo para criar a nota." /><a routerLink="/products/new" class="inline-flex rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800">Cadastrar produto</a></div> }
-        @else {
-          <form (submit)="onSubmit($event)" class="space-y-6" novalidate>
-            @if (submitError(); as apiError) { <app-feedback-message kind="error" title="Não foi possível criar a nota." [message]="apiError.message" [traceId]="apiError.traceId" /> }
-            @if (showItemsError()) { <app-feedback-message kind="error" title="Revise os itens da nota." [message]="invoiceForm.items().errors()[0].message ?? 'Os itens informados são inválidos.'" /> }
-
-            <div class="space-y-4">
-              @for (item of draft().items; track $index; let itemIndex = $index) {
-                <fieldset class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-                  <legend class="px-1 text-sm font-bold text-slate-800">Item {{ itemIndex + 1 }}</legend>
-                  <div class="grid gap-4 md:grid-cols-[1fr_10rem_auto] md:items-start">
-                    <div>
-                      <label [for]="'product-' + itemIndex" class="block text-sm font-semibold text-slate-800">Produto</label>
-                      <select [id]="'product-' + itemIndex" [formField]="invoiceForm.items[itemIndex].productId" [attr.aria-describedby]="'product-help-' + itemIndex" class="mt-2 block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-200">
-                        <option value="">Selecione um produto</option>
-                        @for (product of products(); track product.id) { <option [value]="product.id" [disabled]="isSelectedByAnotherItem(product.id, itemIndex)">{{ product.code }} — {{ product.description }}</option> }
-                      </select>
-                      @if (invoiceForm.items[itemIndex].productId().touched() && invoiceForm.items[itemIndex].productId().invalid()) { <p [id]="'product-help-' + itemIndex" class="mt-2 text-sm text-red-700">{{ invoiceForm.items[itemIndex].productId().errors()[0].message }}</p> }
-                      @else if (selectedProduct(item.productId); as product) { <p [id]="'product-help-' + itemIndex" class="mt-2 text-xs text-slate-500">Saldo atual: <strong>{{ product.balance }}</strong>.</p> }
-                      @else { <p [id]="'product-help-' + itemIndex" class="sr-only">Selecione um produto para este item.</p> }
-                    </div>
-                    <div>
-                      <label [for]="'quantity-' + itemIndex" class="block text-sm font-semibold text-slate-800">Quantidade</label>
-                      <input [id]="'quantity-' + itemIndex" type="number" step="1" inputmode="numeric" [formField]="invoiceForm.items[itemIndex].quantity" [attr.aria-describedby]="'quantity-help-' + itemIndex" class="mt-2 block w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-200" />
-                      @if (invoiceForm.items[itemIndex].quantity().touched() && invoiceForm.items[itemIndex].quantity().invalid()) { <p [id]="'quantity-help-' + itemIndex" class="mt-2 text-sm text-red-700">{{ invoiceForm.items[itemIndex].quantity().errors()[0].message }}</p> }
-                      @else { <p [id]="'quantity-help-' + itemIndex" class="sr-only">Informe uma quantidade inteira maior que zero.</p> }
-                    </div>
-                    <button type="button" (click)="removeItem(itemIndex)" [disabled]="draft().items.length === 1" class="mt-7 min-h-10 rounded-lg border border-red-300 px-3 py-2 text-sm font-semibold text-red-800 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-40" [attr.aria-label]="'Remover item ' + (itemIndex + 1)">Remover</button>
-                  </div>
-                </fieldset>
-              }
-            </div>
-
-            <button type="button" (click)="addItem()" class="rounded-lg border border-blue-300 bg-white px-4 py-2 text-sm font-semibold text-blue-800 hover:bg-blue-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700">+ Adicionar produto</button>
-            <div class="flex flex-wrap justify-end gap-3 border-t border-slate-200 pt-5"><button type="button" (click)="cancel()" [disabled]="submitting()" class="inline-flex min-h-10 items-center rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50">Cancelar</button><app-processing-button label="Criar nota" processingLabel="Criando nota..." [processing]="submitting()" /></div>
-          </form>
-        }
-  `,
+  templateUrl: './invoice-create-form.html',
 })
 export class InvoiceCreateForm {
   readonly created = output<Invoice>();
@@ -124,13 +84,7 @@ export class InvoiceCreateForm {
 
 @Component({
   imports: [InvoiceCreateForm, RouterLink],
-  template: `
-    <section class="mx-auto max-w-4xl">
-      <a routerLink="/invoices" class="text-sm font-semibold text-blue-700 hover:text-blue-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700">← Voltar para notas fiscais</a>
-      <div class="mt-5"><p class="text-sm font-semibold text-blue-700">Faturamento</p><h1 class="mt-1 text-3xl font-bold tracking-tight">Nova nota fiscal</h1><p class="mt-2 text-slate-600">Adicione os produtos e as quantidades.</p></div>
-      <div class="mt-8"><app-invoice-create-form (created)="onCreated($event)" (cancelled)="onCancelled()" /></div>
-    </section>
-  `,
+  templateUrl: './invoice-create-page.html',
 })
 export class InvoiceCreatePage {
   private readonly router = inject(Router);
