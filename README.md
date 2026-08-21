@@ -51,6 +51,7 @@ Principais tecnologias utilizadas no projeto:
   * [Modo de Demonstração](#modo-de-demonstração)
   * [Endereços do Ambiente](#endereços-do-ambiente)
 * [Testes](#testes)
+* [Integração contínua](#integração-contínua)
 * [Arquitetura](#arquitetura)
 
 # Como Rodar o Projeto
@@ -187,6 +188,12 @@ dotnet test caminho/do/projeto.csproj
 ```
 
 Os containers utilizados durante os testes são criados de forma isolada e gerenciados automaticamente pelo Testcontainers.
+
+## Integração contínua
+
+Pull requests para a branch `main` são validados pelo GitHub Actions. O pipeline compila e testa os dois microserviços e o frontend, além de validar o build das três imagens Docker.
+
+O merge deve ser protegido pelo check obrigatório **`CI / Gate`**. Consulte [a documentação do pipeline](docs/pipeline-ci.md) para conhecer as validações e configurar o ruleset da branch.
 
 # Arquitetura
 
